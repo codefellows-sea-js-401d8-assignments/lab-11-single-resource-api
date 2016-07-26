@@ -2,8 +2,6 @@ const express = require('express');
 
 const server = express();
 
-server.get('/', (req, res) => {
-  res.send('Hello World!');
-});
+server.use('/pokemon', require('./routes/pokemon'));
 
 module.exports = server;
