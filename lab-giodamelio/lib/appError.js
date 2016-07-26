@@ -17,10 +17,4 @@ AppError.badRequest = function(res, message) {
   });
 };
 
-AppError.internalServerError = function(res, message) {
-  return new AppError(res, message, 500, {
-    error: 'Internal server error',
-  });
-};
-
 module.exports = AppError;

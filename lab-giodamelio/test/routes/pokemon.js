@@ -108,6 +108,19 @@ describe('Route - Pokemon', () => {
           error: 'Not found',
         });
     });
+
+    it('Update pokemon without sending id', function() {
+      return this.server
+        .put('/api/pokemon')
+        .send({
+          height: 9001,
+        })
+        .expect(400)
+        .expect('Content-Type', /json/)
+        .expect({
+          error: 'Bad request',
+        });
+    });
   });
 
   describe('POST', () => {
@@ -179,6 +192,16 @@ describe('Route - Pokemon', () => {
         .expect('Content-Type', /json/)
         .expect({
           error: 'Not found',
+        });
+    });
+
+    it('Delete pokemon without sending id', function() {
+      return this.server
+        .delete('/api/pokemon')
+        .expect(400)
+        .expect('Content-Type', /json/)
+        .expect({
+          error: 'Bad request',
         });
     });
   });
