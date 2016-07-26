@@ -5,6 +5,35 @@ const shortid = require('shortid');
 const server = require('../../lib/server');
 
 describe('Route - Pokemon', () => {
+  describe('GET', () => {
+    before(function() {
+      this.server = supertest.agent(server);
+      return this.server
+        .post('/api/pokemon')
+        .send({
+          name: 'Bulbasaur',
+          number: 1,
+          height: 7,
+        })
+        .then((res) => {
+          this.id = res.body.id;
+        });
+    });
+
+    it('Get existing pokemon', function() {
+      return this.server
+        .get(`/api/pokemon/${this.id}`)
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect((res) => {
+          expect(shortid.isValid(res.body.id)).to.be.true;
+          expect(res.body.name).to.equal('Bulbasaur');
+          expect(res.body.number).to.equal(1);
+          expect(res.body.height).to.equal(7);
+        });
+    });
+  });
+
   describe('POST', () => {
     it('Create new pokemon', () => (
       supertest(server)

@@ -7,14 +7,16 @@ const router = new Router();
 
 const POKEMON = {};
 
-router.get('/', (req, res) => {
-  res.send('Hello Pokemon');
+router.get('/:id', (req, res) => {
+  const pokemon = POKEMON[req.params.id];
+  res.json(pokemon);
+  debug(`Read pokemon ${pokemon.name}(${pokemon.id})`);
 });
 
 router.post('/', (req, res) => {
   const pokemon = new Pokemon(req.body.name, req.body.number, req.body.height);
   POKEMON[pokemon.id] = pokemon;
-  res.send(pokemon);
+  res.json(pokemon);
   debug(`Created new pokemon ${pokemon.name}(${pokemon.id})`);
 });
 
