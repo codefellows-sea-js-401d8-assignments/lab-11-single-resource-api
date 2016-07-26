@@ -32,6 +32,16 @@ describe('Route - Pokemon', () => {
           expect(res.body.height).to.equal(7);
         });
     });
+
+    it('List all pokemon', function() {
+      return this.server
+        .get('/api/pokemon/all')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect((res) => {
+          expect(res.body).to.be.a('array');
+        });
+    });
   });
 
   describe('PUT', () => {

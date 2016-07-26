@@ -1,12 +1,18 @@
 'use strict';
 const Router = require('express').Router;
 const debug = require('debug')('lab:router:pokemon');
+const _ = require('lodash');
 
 const Pokemon = require('../models/pokemon');
 
 const router = new Router();
 
 const POKEMON = {};
+
+router.get('/all', (req, res) => {
+  res.json(_.values(POKEMON));
+  debug('Listing app pokemon');
+});
 
 router.get('/:id', (req, res) => {
   const pokemon = POKEMON[req.params.id];
