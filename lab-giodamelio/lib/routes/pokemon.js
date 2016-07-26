@@ -1,3 +1,4 @@
+'use strict';
 const Router = require('express').Router;
 const debug = require('debug')('lab:router:pokemon');
 
@@ -11,6 +12,13 @@ router.get('/:id', (req, res) => {
   const pokemon = POKEMON[req.params.id];
   res.json(pokemon);
   debug(`Read pokemon ${pokemon.name}(${pokemon.id})`);
+});
+
+router.put('/:id', (req, res) => {
+  let pokemon = POKEMON[req.params.id];
+  pokemon = Object.assign(pokemon, req.body);
+  res.json(pokemon);
+  debug(`Updated pokemon ${pokemon.name}(${pokemon.id})`);
 });
 
 router.post('/', (req, res) => {

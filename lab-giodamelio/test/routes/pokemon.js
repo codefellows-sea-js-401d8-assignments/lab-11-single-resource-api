@@ -34,6 +34,38 @@ describe('Route - Pokemon', () => {
     });
   });
 
+  describe('PUT', () => {
+    before(function() {
+      this.server = supertest.agent(server);
+      return this.server
+        .post('/api/pokemon')
+        .send({
+          name: 'Bulbasaur',
+          number: 1,
+          height: 7,
+        })
+        .then((res) => {
+          this.id = res.body.id;
+        });
+    });
+
+    it('Update existing pokemon', function() {
+      return this.server
+        .put(`/api/pokemon/${this.id}`)
+        .send({
+          height: 9001,
+        })
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect((res) => {
+          expect(shortid.isValid(res.body.id)).to.be.true;
+          expect(res.body.name).to.equal('Bulbasaur');
+          expect(res.body.number).to.equal(1);
+          expect(res.body.height).to.equal(9001);
+        });
+    });
+  });
+
   describe('POST', () => {
     it('Create new pokemon', () => (
       supertest(server)
