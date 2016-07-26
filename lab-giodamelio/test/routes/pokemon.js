@@ -128,6 +128,20 @@ describe('Route - Pokemon', () => {
           expect(res.body.height).to.equal(7);
         })
     ));
+
+    it('Create new pokemon without enough data', () => (
+      supertest(server)
+        .post('/api/pokemon')
+        .send({
+          name: 'Bulbasaur',
+          number: 1,
+        })
+        .expect('Content-Type', /json/)
+        .expect(400)
+        .expect({
+          error: 'Bad request',
+        })
+    ));
   });
 
   describe('DELETE', () => {

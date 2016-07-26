@@ -45,10 +45,14 @@ router.put('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  const pokemon = new Pokemon(req.body.name, req.body.number, req.body.height);
-  POKEMON[pokemon.id] = pokemon;
-  res.json(pokemon);
-  debug(`Created new pokemon ${pokemon.name}(${pokemon.id})`);
+  if (req.body.name && req.body.number && req.body.height) {
+    const pokemon = new Pokemon(req.body.name, req.body.number, req.body.height);
+    POKEMON[pokemon.id] = pokemon;
+    res.json(pokemon);
+    debug(`Created new pokemon ${pokemon.name}(${pokemon.id})`);
+  } else {
+    AppError.badRequest(res, 'Insufficent data to create new pokemon');
+  }
 });
 
 router.delete('/:id', (req, res) => {
