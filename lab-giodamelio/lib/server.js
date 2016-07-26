@@ -1,7 +1,9 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 
 const server = express();
 
-server.use('/pokemon', require('./routes/pokemon'));
+server.use(bodyParser.json());
+server.use('/api/pokemon', require('./routes/pokemon'));
 
 module.exports = server;
