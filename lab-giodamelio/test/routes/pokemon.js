@@ -42,6 +42,26 @@ describe('Route - Pokemon', () => {
           expect(res.body).to.be.a('array');
         });
     });
+
+    it('Get pokemon that does not exist', function() {
+      return this.server
+        .get('/api/pokemon/IAmNotAValidId')
+        .expect(404)
+        .expect('Content-Type', /json/)
+        .expect({
+          error: 'Not found',
+        });
+    });
+
+    it('Get pokemon without sending id', function() {
+      return this.server
+        .get('/api/pokemon')
+        .expect(400)
+        .expect('Content-Type', /json/)
+        .expect({
+          error: 'Bad request',
+        });
+    });
   });
 
   describe('PUT', () => {

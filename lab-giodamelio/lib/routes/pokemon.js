@@ -4,6 +4,7 @@ const debug = require('debug')('lab:router:pokemon');
 const _ = require('lodash');
 
 const Pokemon = require('../models/pokemon');
+const AppError = require('../appError');
 
 const router = new Router();
 
@@ -16,8 +17,16 @@ router.get('/all', (req, res) => {
 
 router.get('/:id', (req, res) => {
   const pokemon = POKEMON[req.params.id];
-  res.json(pokemon);
-  debug(`Read pokemon ${pokemon.name}(${pokemon.id})`);
+  if (pokemon) {
+    res.json(pokemon);
+    debug(`Read pokemon ${pokemon.name}(${pokemon.id})`);
+  } else {
+    AppError.notFound(res, `Pokemon with id '${req.params.id}' does not exist`);
+  }
+});
+
+router.get('/', (req, res) => {
+  AppError.badRequest(res, 'No pokemon id sent');
 });
 
 router.put('/:id', (req, res) => {
