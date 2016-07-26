@@ -22,5 +22,7 @@
     "supertest": "^1.2.0",
     "supertest-as-promised": "^3.2.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "express": "^4.14.0"
+  }
 }
