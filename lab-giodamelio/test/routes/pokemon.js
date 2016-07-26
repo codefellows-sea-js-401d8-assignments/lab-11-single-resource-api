@@ -2,6 +2,7 @@ const supertest = require('supertest-as-promised');
 const expect = require('chai').expect;
 const shortid = require('shortid');
 
+process.env.DEBUG = ''; // Hide debug messages during the tests
 const server = require('../../lib/server');
 
 describe('Route - Pokemon', () => {
