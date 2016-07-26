@@ -95,6 +95,19 @@ describe('Route - Pokemon', () => {
           expect(res.body.height).to.equal(9001);
         });
     });
+
+    it('Update pokemon that does not exist', function() {
+      return this.server
+        .put('/api/pokemon/HahaIDoNotExist')
+        .send({
+          height: 9001,
+        })
+        .expect(404)
+        .expect('Content-Type', /json/)
+        .expect({
+          error: 'Not found',
+        });
+    });
   });
 
   describe('POST', () => {

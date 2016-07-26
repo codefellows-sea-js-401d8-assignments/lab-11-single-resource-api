@@ -31,9 +31,17 @@ router.get('/', (req, res) => {
 
 router.put('/:id', (req, res) => {
   let pokemon = POKEMON[req.params.id];
-  pokemon = Object.assign(pokemon, req.body);
-  res.json(pokemon);
-  debug(`Updated pokemon ${pokemon.name}(${pokemon.id})`);
+  if (pokemon) {
+    pokemon = Object.assign(pokemon, req.body);
+    res.json(pokemon);
+    debug(`Updated pokemon ${pokemon.name}(${pokemon.id})`);
+  } else {
+    AppError.notFound(res, `Pokemon with id=${req.params.id} does not exist`);
+  }
+});
+
+router.put('/', (req, res) => {
+  AppError.badRequest(res, 'No pokemon id sent');
 });
 
 router.post('/', (req, res) => {
