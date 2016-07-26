@@ -4,9 +4,7 @@
   "description": "",
   "main": "lib/index.js",
   "scripts": {
-    "test": "mocha test/",
-    "lint": "eslint lib/ test/",
-    "cover": "istanbul cover _mocha test/**/*.js"
+    "test": "gulp test"
   },
   "author": "Gio d'Amelio",
   "license": "MIT",
@@ -17,6 +15,7 @@
     "eslint-plugin-import": "^1.12.0",
     "gulp": "^3.9.1",
     "gulp-eslint": "^3.0.1",
+    "gulp-istanbul": "^1.0.0",
     "gulp-mocha": "^2.2.0",
     "gulp-nodemon": "^2.1.0",
     "istanbul": "^0.4.4",

@@ -1,10 +1,10 @@
 # Pokemon API
 
-    # Run the tests and lint
-    gulp
+    # Run the tests with code coverage reports
+    gulp test
 
-    # Check the testing coverage
-    npm run cover
+    # Run the linter
+    gulp lint
 
     # Run dev server
     gulp watch

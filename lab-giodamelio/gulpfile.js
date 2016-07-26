@@ -4,6 +4,7 @@ const gulp = require('gulp');
 const eslint = require('gulp-eslint');
 const mocha = require('gulp-mocha');
 const nodemon = require('gulp-nodemon');
+const istanbul = require('gulp-istanbul');
 
 const srcFiles = ['lib/**/*.js', 'bin/*'];
 const testFiles = 'test/**/*.js';
@@ -43,10 +44,16 @@ gulp.task('lint:watch', () => {
 
 // Test tasks ---------------------------------------------
 gulp.task('test', () => {
+  gulp.src(srcFiles)
+    .pipe(istanbul())
+    .pipe(istanbul.hookRequire());
+
   return gulp.src(testFiles, { read: false })
     .pipe(mocha({
       reporter: 'spec'
-    }));
+    }))
+    .pipe(istanbul.writeReports())
+    .pipe(istanbul.enforceThresholds({ thresholds: { global: 90 } }));
 });
 
 gulp.task('test:watch', ['test'], () => {
