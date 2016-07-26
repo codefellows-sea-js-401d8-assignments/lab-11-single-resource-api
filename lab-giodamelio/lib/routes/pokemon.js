@@ -57,9 +57,17 @@ router.post('/', (req, res) => {
 
 router.delete('/:id', (req, res) => {
   const pokemon = POKEMON[req.params.id];
-  res.json(pokemon);
-  delete POKEMON[req.params.id];
-  debug(`Deleted new pokemon ${pokemon.name}(${pokemon.id})`);
+  if (pokemon) {
+    res.json(pokemon);
+    delete POKEMON[req.params.id];
+    debug(`Deleted new pokemon ${pokemon.name}(${pokemon.id})`);
+  } else {
+    AppError.notFound(res, `Pokemon with id=${req.params.id} does not exist`);
+  }
+});
+
+router.delete('/', (req, res) => {
+  AppError.badRequest(res, 'No pokemon id sent');
 });
 
 module.exports = router;

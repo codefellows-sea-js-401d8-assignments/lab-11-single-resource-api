@@ -171,5 +171,15 @@ describe('Route - Pokemon', () => {
           expect(res.body.height).to.equal(7);
         });
     });
+
+    it('Delete pokemon that does not exist', function() {
+      return this.server
+        .delete('/api/pokemon/IAmNotAnId')
+        .expect(404)
+        .expect('Content-Type', /json/)
+        .expect({
+          error: 'Not found',
+        });
+    });
   });
 });
