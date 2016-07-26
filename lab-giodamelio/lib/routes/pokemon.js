@@ -28,4 +28,11 @@ router.post('/', (req, res) => {
   debug(`Created new pokemon ${pokemon.name}(${pokemon.id})`);
 });
 
+router.delete('/:id', (req, res) => {
+  const pokemon = POKEMON[req.params.id];
+  res.json(pokemon);
+  delete POKEMON[req.params.id];
+  debug(`Deleted new pokemon ${pokemon.name}(${pokemon.id})`);
+});
+
 module.exports = router;
