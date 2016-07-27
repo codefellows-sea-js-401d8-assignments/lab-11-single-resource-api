@@ -21,12 +21,12 @@ router.get('/:id', (req, res) => {
     res.json(pokemon);
     debug(`Read pokemon ${pokemon.name}(${pokemon.id})`);
   } else {
-    AppError.notFound(res, `Pokemon with id '${req.params.id}' does not exist`);
+    res.sendError(new AppError(404, `Pokemon with id '${req.params.id}' does not exist`));
   }
 });
 
 router.get('/', (req, res) => {
-  AppError.badRequest(res, 'No pokemon id sent');
+  res.sendError(new AppError(400, 'No pokemon id sent'));
 });
 
 router.put('/:id', (req, res) => {
@@ -36,12 +36,12 @@ router.put('/:id', (req, res) => {
     res.json(pokemon);
     debug(`Updated pokemon ${pokemon.name}(${pokemon.id})`);
   } else {
-    AppError.notFound(res, `Pokemon with id=${req.params.id} does not exist`);
+    res.sendError(new AppError(404, `Pokemon with id=${req.params.id} does not exist`));
   }
 });
 
 router.put('/', (req, res) => {
-  AppError.badRequest(res, 'No pokemon id sent');
+  res.sendError(new AppError(400, 'No pokemon id sent'));
 });
 
 router.post('/', (req, res) => {
@@ -51,7 +51,7 @@ router.post('/', (req, res) => {
     res.json(pokemon);
     debug(`Created new pokemon ${pokemon.name}(${pokemon.id})`);
   } else {
-    AppError.badRequest(res, 'Insufficent data to create new pokemon');
+    res.sendError(new AppError(400, 'Insufficent data to create new pokemon'));
   }
 });
 
@@ -62,12 +62,12 @@ router.delete('/:id', (req, res) => {
     delete POKEMON[req.params.id];
     debug(`Deleted new pokemon ${pokemon.name}(${pokemon.id})`);
   } else {
-    AppError.notFound(res, `Pokemon with id=${req.params.id} does not exist`);
+    res.sendError(new AppError(404, `Pokemon with id=${req.params.id} does not exist`));
   }
 });
 
 router.delete('/', (req, res) => {
-  AppError.badRequest(res, 'No pokemon id sent');
+  res.sendError(new AppError(400, 'No pokemon id sent'));
 });
 
 module.exports = router;

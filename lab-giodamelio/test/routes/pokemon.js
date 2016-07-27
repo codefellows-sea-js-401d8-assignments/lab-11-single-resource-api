@@ -51,8 +51,10 @@ describe('Route - Pokemon', () => {
         .get('/api/pokemon/IAmNotAValidId')
         .expect(404)
         .expect('Content-Type', /json/)
-        .expect({
-          error: 'Not found',
+        .expect((res) => {
+          expect(res.body).to.exist;
+          expect(res.body).to.have.property('error');
+          expect(res.body.error).to.match(/does not exist/);
         });
     });
 
@@ -62,7 +64,7 @@ describe('Route - Pokemon', () => {
         .expect(400)
         .expect('Content-Type', /json/)
         .expect({
-          error: 'Bad request',
+          error: 'No pokemon id sent',
         });
     });
   });
@@ -106,8 +108,10 @@ describe('Route - Pokemon', () => {
         })
         .expect(404)
         .expect('Content-Type', /json/)
-        .expect({
-          error: 'Not found',
+        .expect((res) => {
+          expect(res.body).to.exist;
+          expect(res.body).to.have.property('error');
+          expect(res.body.error).to.match(/does not exist/);
         });
     });
 
@@ -120,7 +124,7 @@ describe('Route - Pokemon', () => {
         .expect(400)
         .expect('Content-Type', /json/)
         .expect({
-          error: 'Bad request',
+          error: 'No pokemon id sent',
         });
     });
   });
@@ -154,7 +158,7 @@ describe('Route - Pokemon', () => {
         .expect('Content-Type', /json/)
         .expect(400)
         .expect({
-          error: 'Bad request',
+          error: 'Insufficent data to create new pokemon',
         })
     ));
   });
@@ -192,8 +196,10 @@ describe('Route - Pokemon', () => {
         .delete('/api/pokemon/IAmNotAnId')
         .expect(404)
         .expect('Content-Type', /json/)
-        .expect({
-          error: 'Not found',
+        .expect((res) => {
+          expect(res.body).to.exist;
+          expect(res.body).to.have.property('error');
+          expect(res.body.error).to.match(/does not exist/);
         });
     });
 
@@ -203,7 +209,7 @@ describe('Route - Pokemon', () => {
         .expect(400)
         .expect('Content-Type', /json/)
         .expect({
-          error: 'Bad request',
+          error: 'No pokemon id sent',
         });
     });
   });
