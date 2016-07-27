@@ -6,7 +6,7 @@ const mocha = require('gulp-mocha');
 const nodemon = require('gulp-nodemon');
 const istanbul = require('gulp-istanbul');
 
-const srcFiles = ['lib/**/*.js', 'bin/*'];
+const srcFiles = ['lib/**/*.js'];
 const testFiles = ['test/**/*.js', 'gulpfile.js'];
 
 const eslintRules = JSON.parse(fs.readFileSync('./.eslintrc'));
@@ -43,18 +43,20 @@ gulp.task('lint:watch', () => {
 });
 
 // Test tasks ---------------------------------------------
-gulp.task('test', () => {
+gulp.task('pre-test', () => (
   gulp.src(srcFiles)
     .pipe(istanbul())
-    .pipe(istanbul.hookRequire());
+    .pipe(istanbul.hookRequire())
+));
 
-  return gulp.src(testFiles, { read: false })
+gulp.task('test', ['pre-test'], () => (
+  gulp.src(testFiles, { read: false })
     .pipe(mocha({
       reporter: 'spec',
     }))
     .pipe(istanbul.writeReports())
-    .pipe(istanbul.enforceThresholds({ thresholds: { global: 90 } }));
-});
+    .pipe(istanbul.enforceThresholds({ thresholds: { global: 90 } }))
+));
 
 gulp.task('test:watch', ['test'], () => {
   gulp.watch([srcFiles, testFiles], ['test'])
