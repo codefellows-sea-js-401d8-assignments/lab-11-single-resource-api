@@ -13,4 +13,11 @@ heroRouter.post('/hero', jsonParser, (req, res) => {
   });
 });
 
+heroRouter.get('/hero/:id', jsonParser, (req, res) => {
+  Hero.findById(req.params.id, (err, hero) => {
+    if (err) return err;
+    res.json(hero);
+  });
+});
+
 module.exports = heroRouter;
