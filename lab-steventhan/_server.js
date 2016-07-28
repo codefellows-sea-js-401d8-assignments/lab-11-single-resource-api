@@ -20,15 +20,13 @@ server.get('/', (req, res) => {
   res.status(200).send('For project API, please go to /api/projects');
 });
 
-server.use((req, res, next) => {
+server.get('*', (req, res, next) => {
   let error = AppError.new404('404 Not Found');
   next(error);
 });
 
 server.use((err, req, res, next) => {
-  res.status(500).json({
-    message: err.message
-  });
+  res.sendError(err);
   next(err);
 });
 

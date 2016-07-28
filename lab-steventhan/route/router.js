@@ -21,7 +21,18 @@ projectRouter.get('/all', (req, res, next) => {
 });
 
 projectRouter.get('/:id', (req, res, next) => {
-
+  let _id = req.params.id;
+  Project.count({_id}, (err, count) => {
+    if (err) return next(err);
+    if (count > 0) {
+      Project.find({_id}, (err, project) => {
+        if (err) return next(err);
+        return res.json(project);
+      });
+    } else {
+      next(AppError.new404('Id not found'));
+    }
+  });
 });
 
 projectRouter.post('/', bodyParser, (req, res, next) => {
@@ -38,14 +49,46 @@ projectRouter.post('/', bodyParser, (req, res, next) => {
       if(err) return next(err);
       return res.json(project);
     });
-  }});
-
-projectRouter.delete('/:id', (req, res) => {
-  // api.projectsDelete(req, res);
+  } else {
+    next(AppError.new400('Invalid Json'));
+  }
 });
 
-projectRouter.put('/:id', (req, res) => {
-  // api.projectsPut(req, res);
+projectRouter.delete('/:id', (req, res, next) => {
+  let _id = req.params.id;
+  Project.findOneAndRemove({_id}, (err) => {
+    if (err) return next(err);
+    return res.json({
+      status: 204,
+      msg: 'Success'
+    });
+  });
+  // next();
+});
+
+projectRouter.put('/:id', bodyParser, (req, res, next) => {
+  let _id = req.params.id;
+  let parsedJson = req.body;
+  Project.count({_id}, (err, count) => {
+    if (err) return next(err);
+    if (count > 0) {
+      if (parsedJson.projectName !== undefined &&
+          parsedJson.technology !== undefined &&
+          parsedJson.github !== undefined) {
+        Project.findOneAndUpdate({_id}, parsedJson, (err) => {
+          if (err) return next(err);
+          return res.json({
+            status: 200,
+            msg: 'Success'
+          });
+        });
+      } else {
+        next(AppError.new400('Invalid Json'));
+      }
+    } else {
+      next(AppError.new404('Id not found'));
+    }
+  });
 });
 
 
