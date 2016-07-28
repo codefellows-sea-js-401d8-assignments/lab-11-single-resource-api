@@ -5,10 +5,6 @@ Clone down then run in terminal:
 ```
 npm i
 ```
-To run tests and lint files in terminal type:
-```
-gulp
-```
 To start mongodb in terminal:
 ```
 mongod --dbpath exampleDB
@@ -16,6 +12,10 @@ mongod --dbpath exampleDB
 To start server in terminal:
 ```
 node server.js
+```
+To run tests and lint files, make sure mongodb is running, then in terminal type:
+```
+gulp
 ```
 
 ## Using httpie to interact with server on the command line

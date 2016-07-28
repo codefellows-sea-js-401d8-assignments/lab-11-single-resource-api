@@ -7,7 +7,6 @@ const expect = chai.expect;
 const request = chai.request;
 
 const mongoose = require('mongoose');
-// const Hit = require('../model/Hit');
 
 //connect to mongod
 const TEST_DB_SERVER = 'mongodb://localhost/test_db';
@@ -19,7 +18,9 @@ describe('Testing hitlist CRUD with mongodb', function() {
   after(function(done) {
     mongoose.connection.db.dropDatabase(function() {
       testServer.close(function() {
-        done();
+        mongoose.connection.close(function() {
+          done();
+        });
       });
     });
   });

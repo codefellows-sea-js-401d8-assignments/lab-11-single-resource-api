@@ -15,23 +15,19 @@ hitRouter.get('/all', (req, res) => {
   });
 });
 
-
 hitRouter.get('/:id', (req, res) => {
   let _id = req.params.id;
   if(!_id)
     return res.sendError(AppError.error404('get requested with no ID'));
-
   Hit.findById(_id, (err, hit) => {
     if (err) {
       if (!hit)
         return res.sendError(AppError.error404('get requested with invalid ID'));
       return res.sendError(err);
     }
-
     res.json(hit);
   });
 });
-
 
 hitRouter.post('/', bodyParser.json(), (req, res) => {
   if(!req.body || !req.body.name || !req.body.location || !req.body.location || !req.body.price)
@@ -45,7 +41,6 @@ hitRouter.post('/', bodyParser.json(), (req, res) => {
     res.json(hit);
   });
 });
-
 
 hitRouter.put('/:id', bodyParser.json(), (req, res) => {
   let _id = req.params.id;
@@ -68,7 +63,6 @@ hitRouter.put('/:id', bodyParser.json(), (req, res) => {
   });
 });
 
-
 hitRouter.delete('/all', (req, res) => {
   mongoose.connection.db.dropDatabase(function() {
     console.log('database destroyed');
@@ -76,12 +70,10 @@ hitRouter.delete('/all', (req, res) => {
   res.status(204).end();
 });
 
-
 hitRouter.delete('/:id', (req, res) => {
   let _id = req.params.id;
   if(!_id)
     return res.sendError(AppError.error404('delete requested with no ID'));
-
   Hit.findByIdAndRemove(_id, (err, hit) => {
     if (err) {
       if (!hit)
