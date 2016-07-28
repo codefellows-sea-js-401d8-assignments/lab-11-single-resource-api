@@ -8,5 +8,5 @@ const pokemonSchema = new Schema({
   pokeType: String
 });
 
-var pokemonMongo = mongoose.model('pokemonMongo', pokemonSchema);
-module.exports = pokemonMongo;
+var Pokemon = mongoose.model('Pokemon', pokemonSchema);
+module.exports = Pokemon;

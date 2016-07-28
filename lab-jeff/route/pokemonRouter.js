@@ -1,42 +1,48 @@
 'use strict';
 
-const pokemonMongo = require('../model/pokemonMongo');
+const Pokemon = require('../model/pokemon');
 const express = require('express');
 const router = express.Router();
 
-let pokemonCollection = {}; 
-
 router.post('/pokemon/', (req, res, next) => {
-  let newPokemon = new pokemonMongo(req.body);
+  let newPokemon = new Pokemon(req.body);
   newPokemon.save((err, pokemon) => {
     if (err) return next(err);
     res.json(pokemon);
   });
 });
 
-router.delete('/pokemon/:pokeId', (req, res) => {
-  for(let key in pokemonCollection){
-    if(key === req.params.pokeId) {
-      console.log('Deleting: ' + pokemonCollection[key].pokeName);
-      delete pokemonCollection[key];
-      res.json({message: 'Succesfull delete'});
+router.delete('/pokemon/:_id', (req, res, next) => {
+  let _id = req.params._id;
+  Pokemon.findOneAndRemove({_id}, (err, pokemon) => {
+    if (pokemon === undefined) {
+      let err = new Error();
+      err.status = 404;
+      return next(err);
     }
-  }
-  res.end();
+    res.json('Succesfull delete...');
+  });
 });
 
-router.get('/pokemon/:pokeId', (req, res, next) => {
-  for(let key in pokemonCollection){
-    if(key === req.params.pokeId) {
-      console.log('Found matching Pokemon!');
-      res.json('Here is the pokemon you requested: ' + pokemonCollection[key].pokeName +
-      ', type: ' + pokemonCollection[key].pokeType);
-      res.end();
+router.get('/pokemon/:_id', (req, res, next) => {
+  let _id = req.params._id;
+  Pokemon.findOne({_id}, (err, pokemon) => {
+    console.log(pokemon);
+    if (pokemon === undefined) {
+      let err = new Error();
+      err.status = 404;
+      return next(err);
     }
-  }
-  let handledError = new Error();
-  handledError.status = 404;
-  next(handledError);
+    if (err) return next(err);
+    res.json(pokemon);
+  });
+});
+
+router.get('/pokemon/', (req, res, next) => {
+  Pokemon.find({}, (err, pokemons) => {
+    if (err) return next(err);
+    res.json(pokemons);
+  });
 });
 
 router.get('/', (req, res) => {
