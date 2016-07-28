@@ -11,7 +11,7 @@ Single Resource API
 - Send a POST request in another tab with: http POST :3000/api/user {'name': <String>, 'active': <Boolean>, 'date': <Number>};
 - Send a GET request with: http GET :3000/api/user/<id>
 - Send a PUT request with: http PUT :3000/api/user/<id> {'name': <String>, 'active': <Boolean>, 'date': <Number>}
-- Send a GET request to list all users with with: http GET :3000/api/all
+- Bonus: Send a GET request to list all users with with: http GET :3000/api/all
 - Run eslint and mocha tests by typing 'gulp' in the command line  
 
 Not finished. Will resubmit.
