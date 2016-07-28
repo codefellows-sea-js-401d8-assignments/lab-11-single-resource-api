@@ -3,7 +3,6 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const pokemonRouter = require('./route/pokemon-router');
-const AppError = require('./lib/AppError');
 const morgan = require('morgan');
 const errResponse = require('./lib/error_response');
 
@@ -16,13 +15,5 @@ app.use(errResponse());
 app.use(morgan('dev'));
 app.use('/api/pokemon', pokemonRouter);
 
-app.use((err, req, res, next) => {
-  if (err && err.status !== 500) res.sendError(err);
-  next();
-});
-
-app.use((req, res) => {
-  res.json({res});
-});
 
 module.exports = app;

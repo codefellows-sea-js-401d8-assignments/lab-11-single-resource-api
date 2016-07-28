@@ -45,10 +45,11 @@ pokemonRouter.put('/:id', jsonParser, (req, res, next) => {
   Pokemon.findOneAndUpdate({
     '_id': req.params.id
   }, req.body, (err) => {
-    if (err.error.type === 'AppError') return next(err);
+    if (err) return res.sendError(err);
     res.json({
       message: 'success'
     });
+    next();
   });
 });
 
