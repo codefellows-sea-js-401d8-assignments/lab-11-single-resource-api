@@ -39,18 +39,18 @@ describe('Route - Pokemon', () => {
         });
     });
 
-    it('List all pokemon', function() {
-      return supertest(server)
+    it('List all pokemon', () => (
+      supertest(server)
         .get('/api/pokemon/all')
         .expect(200)
         .expect('Content-Type', /json/)
         .expect((res) => {
           expect(res.body).to.be.a('array');
-        });
-    });
+        })
+    ));
 
-    it('Get pokemon that does not exist', function() {
-      return supertest(server)
+    it('Get pokemon that does not exist', () => (
+      supertest(server)
         .get('/api/pokemon/IAmNotAValidId')
         .expect(404)
         .expect('Content-Type', /json/)
@@ -58,18 +58,18 @@ describe('Route - Pokemon', () => {
           expect(res.body).to.exist;
           expect(res.body).to.have.property('error');
           expect(res.body.error).to.match(/does not exist/);
-        });
-    });
+        })
+    ));
 
-    it('Get pokemon without sending id', function() {
-      return supertest(server)
+    it('Get pokemon without sending id', () => (
+      supertest(server)
         .get('/api/pokemon')
         .expect(400)
         .expect('Content-Type', /json/)
         .expect({
           error: 'No pokemon id sent',
-        });
-    });
+        })
+    ));
   });
 
   describe('PUT', () => {
@@ -88,8 +88,8 @@ describe('Route - Pokemon', () => {
         });
     });
 
-    it('Update pokemon that does not exist', function() {
-      return supertest(server)
+    it('Update pokemon that does not exist', () => (
+      supertest(server)
         .put('/api/pokemon/HahaIDoNotExist')
         .send({
           height: 9001,
@@ -100,11 +100,11 @@ describe('Route - Pokemon', () => {
           expect(res.body).to.exist;
           expect(res.body).to.have.property('error');
           expect(res.body.error).to.match(/does not exist/);
-        });
-    });
+        })
+    ));
 
-    it('Update pokemon without sending id', function() {
-      return supertest(server)
+    it('Update pokemon without sending id', () => (
+      supertest(server)
         .put('/api/pokemon')
         .send({
           height: 9001,
@@ -113,8 +113,8 @@ describe('Route - Pokemon', () => {
         .expect('Content-Type', /json/)
         .expect({
           error: 'No pokemon id sent',
-        });
-    });
+        })
+    ));
   });
 
   describe('POST', () => {
@@ -163,8 +163,8 @@ describe('Route - Pokemon', () => {
         });
     });
 
-    it('Delete pokemon that does not exist', function() {
-      return supertest(server)
+    it('Delete pokemon that does not exist', () => (
+      supertest(server)
         .delete('/api/pokemon/IAmNotAnId')
         .expect(404)
         .expect('Content-Type', /json/)
@@ -172,17 +172,17 @@ describe('Route - Pokemon', () => {
           expect(res.body).to.exist;
           expect(res.body).to.have.property('error');
           expect(res.body.error).to.match(/does not exist/);
-        });
-    });
+        })
+    ));
 
-    it('Delete pokemon without sending id', function() {
-      return supertest(server)
+    it('Delete pokemon without sending id', () => (
+      supertest(server)
         .delete('/api/pokemon')
         .expect(400)
         .expect('Content-Type', /json/)
         .expect({
           error: 'No pokemon id sent',
-        });
-    });
+        })
+    ));
   });
 });
