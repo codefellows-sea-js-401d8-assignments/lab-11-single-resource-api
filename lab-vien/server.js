@@ -4,7 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 const debug = require('debug')('movie:server');
-// const morgan = require('morgan');
+const morgan = require('morgan');
 const errorResponse = require('./lib/error-response');
 const hitRouter = require('./route/hit-route');
 const AppError = require('./lib/AppError');
@@ -17,7 +17,7 @@ const server = express();
 
 mongoose.connect(DB_SERVER);
 
-// server.use(morgan('dev'));
+server.use(morgan('dev'));
 server.use(errorResponse());
 server.use('/api/hit', hitRouter);
 

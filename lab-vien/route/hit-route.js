@@ -5,12 +5,12 @@ const Router = require('express').Router;
 const hitRouter = module.exports = Router();
 const Hit = require('../model/Hit');
 const AppError = require('../lib/AppError');
+const mongoose = require('mongoose');
 
 hitRouter.get('/all', (req, res) => {
   Hit.find({}, (err, hits) => {
     if (err)
       return res.sendError(err); // 500, not AppError
-
     res.json(hits);
   });
 });
@@ -66,6 +66,14 @@ hitRouter.put('/:id', bodyParser.json(), (req, res) => {
     }
     res.send('successfully updated');
   });
+});
+
+
+hitRouter.delete('/all', (req, res) => {
+  mongoose.connection.db.dropDatabase(function() {
+    console.log('database destroyed');
+  });
+  res.status(204).end();
 });
 
 
