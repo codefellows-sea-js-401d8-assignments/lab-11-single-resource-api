@@ -5,7 +5,7 @@ const router = express.Router();
 const Movie  = require('../model/movie');
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
-const AppError = require('../lib/AppError');
+const AppError = require('../lib/appError');
 const debug = require('debug')(router);
 
 router.route('/all')
