@@ -1,10 +1,17 @@
-const shortid = require('shortid');
+const mongoose = require('mongoose');
 
-function Pokemon(name, number, height) {
-  this.id = shortid.generate();
-  this.name = name;
-  this.number = number;
-  this.height = height;
-}
-
-module.exports = Pokemon;
+module.exports = mongoose.model('Pokemon', {
+  name: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  number: {
+    type: Number,
+    required: true,
+  },
+  height: {
+    type: Number,
+    required: true,
+  },
+});
