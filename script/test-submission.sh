@@ -8,6 +8,7 @@ for submission in ./lab-*;do
   echo "$(tput setaf 4)Runing mocha for dir ${submission}$(tput sgr0)"
   cd "$submission"
   npm install
+  eslint $(find . -name '*.js' | grep -v '.min.js' | grep -v 'vendor' | grep -v 'node_modules')
   mocha
   if [[ "$?" -eq 1 ]];then 
     exit_code=1
