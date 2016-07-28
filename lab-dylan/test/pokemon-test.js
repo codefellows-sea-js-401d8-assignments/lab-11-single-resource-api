@@ -9,19 +9,20 @@ const expect = chai.expect;
 const mongoose = require('mongoose');
 const Pokemon = require('../model/pokemon');
 var app = require('../server');
-let server;
+var server;
 
 const TEST_DB_SERVER = 'mongodb://localhost/test_db';
 process.env.DB_SERVER = TEST_DB_SERVER;
 
 describe('Test crud', () => {
   before((done) => {
-    server = app.listen(3000, () => {
-      console.log('server up on 3000');
+    server = app.listen(5000, () => {
+      console.log('server up on 5000');
       done();
     });
   });
   after((done) => {
+    console.log('ending');
     mongoose.connection.db.dropDatabase(() => {
       server.close();
       done();
@@ -29,7 +30,7 @@ describe('Test crud', () => {
   });
 
   it('should POST', (done) => {
-    request('localhost:3000')
+    request('localhost:5000')
       .post('/api/pokemon')
       .send({
         name: 'bulbachu',
@@ -47,11 +48,12 @@ describe('Test crud', () => {
 describe('CRUD U Test', () => {
   let testPokemon;
   before((done) => {
-    server = app.listen(3000, () => {console.log('Server up on 3000');
+    server = app.listen(5000, () => {
+      console.log('Server up on 5000');
     });
-    testPokemon = Pokemon({name:'clepuff', type:'fairy', number:37});
+    testPokemon = Pokemon({name:'clepuff', element:'fairy', number:37});
     testPokemon.save((err, pokemon) => {
-      expect(testPokemon).to.be.a(pokemon);
+      testPokemon = pokemon;
       done();
     });
   });
@@ -63,12 +65,12 @@ describe('CRUD U Test', () => {
   });
 
   it('should GET a pokemon', (done) => {
-    request('localhost:3000')
+    request('localhost:5000')
       .get('/api/pokemon/' + testPokemon._id)
       .end((err, res) => {
         expect(err).to.eql(null);
         expect(res.body.name).to.eql('clepuff');
-        expect(res.body.type).to.eql('fairy');
+        expect(res.body.element).to.eql('fairy');
         expect(res.body.number).to.eql(37);
         done();
       });
