@@ -35,7 +35,7 @@ pokemonRouter.post('/', jsonParser, (req, res, next) => {
   if(req.body.name && req.body.element && req.body.number) {
     let newPokemon = new Pokemon(req.body);
     newPokemon.save((err, pokemon) => {
-      if (err.type === 'AppError') return next(err);
+      if (err) return next(err);
       // if (err) appError(400, 'bad request', next)(err);
       res.json(pokemon);
     });
