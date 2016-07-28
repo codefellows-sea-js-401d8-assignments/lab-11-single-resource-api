@@ -39,7 +39,6 @@ api.projectsPost = (req, res, next) => {
       parsedJson.technology !== undefined &&
       parsedJson.github !== undefined) {
     let project = new Project(res.body);
-    debugger;
     project.save((err, project) => {
       if(err) return next(err);
       return res.json(project);
