@@ -2,66 +2,83 @@
 
 const Router = require('express').Router;
 const jsonParser = require('body-parser').json();
-const Constructor = require('../model/constructor.js');
+const PokeModel = require('../model/pokeModel.js');
 const AppError = require('../lib/app_error.js');
 
 let pokeRouter = module.exports = exports = new Router();
 
-let all = {
-  squirtle: {
-    name: 'squirtle',
-    type: 'water',
-    'final evolution': 'Blastoise'
+pokeRouter.get('/all', (req, res) => {
+  console.log('get all');
+  PokeModel.find({}, (err, pokemons) => {
+    console.log('finding');
+    if (err) return (err);
+    return res.json(pokemons);
+  });
+});
+
+pokeRouter.get('/:name', (req, res) => {
+  let name = req.params.name;
+  PokeModel.findOne({name}, (err, p) => {
+    console.log(p);
+    if(p != null){
+      if (err) return (err);
+      return res.json(p);
+    } else{
+      return res.sendError(AppError.error404('Pokemon not found!'));
+    }
+  });
+});
+
+pokeRouter.post('/', jsonParser, (req, res) => {
+  if (!req.body.name) {
+    return res.sendError(AppError.error400('No data inputted.'));
   }
-};
-
-pokeRouter.get('/pokemon/all', (req,res) =>{
-  res.status(200).send(JSON.stringify(Object.keys(all)));
+  PokeModel.findOne({name: req.body.name}, (err, p) => {
+    if (p == null) {
+      let newPokemodel = new PokeModel(req.body);
+      newPokemodel.save((err, pokemons) => {
+        return res.json(pokemons);
+      });
+    } else {
+      res.sendError(AppError.error400('Pokemon already exists, try a PUT instead.'));
+    }
+  });
 });
 
-pokeRouter.get('/', (req, res) => {
-  return res.sendError(AppError.error404('Unregistered location, please try /api/pokemon/'));
-});
-
-pokeRouter.get('/pokemon/', (req, res) => {
-  return res.sendError(AppError.error400('No name inputted.'));
-});
-
-pokeRouter.get('/pokemon/:name', (req, res) => {
-  if (!all[req.params.name]) {
-    return res.sendError(AppError.error404('Pokemon not found!'));
-  }
-  return res.status(200).send(JSON.stringify(all[req.params.name]));
-});
-
-pokeRouter.post('/pokemon/:name', jsonParser, (req, res) => {
+pokeRouter.put('/:name', jsonParser, (req, res) => {
+  let name = req.params.name;
   if (!req.body.name) {
     return res.sendError(AppError.error400('No data inputted for pokemon ' + req.params.name + '.'));
   }
-  let poke = new Constructor(req.body);
-  all[req.params.name] = poke;
-  return res.status(200).send('Pokemon ' + req.params.name + ' added: ' + JSON.stringify(poke));
+  PokeModel.findOne({
+    name: name
+  }, (err, p) => {
+    console.log('find');
+    if (p != null) {
+      PokeModel.findOneAndUpdate({name: name}, req.body, (err) => {
+        if (err) return next(err);
+        res.send('Pokemon ' + name + ' updated!');
+      });
+    } else{
+      return res.sendError(AppError.error404('Pokemon does not yet exist on server.'));
+    }
+  });
 });
 
-pokeRouter.put('/pokemon/:name', jsonParser, (req, res) => {
-  if (!req.body.name) {
-    return res.sendError(AppError.error400('No data inputted for pokemon ' + req.params.name + '.'));
-  }
-  else if (!all[req.params.name]) {
-    return res.sendError(AppError.error404('Pokemon does not yet exist on server.'));
-  }
-  all[req.params.name] = {
-    'name': req.body.name,
-    'type': req.body.type,
-    'final evolution': req.body['final evolution']
-  };
-  return res.status(200).send('Pokemon ' + req.params.name + ' updated: ' + JSON.stringify(all[req.params.name]));
+pokeRouter.delete('/:name', (req, res) => {
+  let name = req.params.name;
+  PokeModel.findOne({name: name}, (err, p) => {
+    if (p != null) {
+      PokeModel.remove({name}, (err, poke) =>{
+        // if (err) return next(err);
+        res.send('Pokemon ' + name + ' was deleted!');
+      });
+    } else{
+      return res.sendError(AppError.error404('Pokemon does not yet exist on server.'));
+    }
+  });
 });
 
-pokeRouter.delete('/pokemon/:name', (req, res) => {
-  if(!all[req.params.name]){
-    return res.sendError(AppError.error404('Pokemon does not yet exist on server.'));
-  }
-  delete all[req.params.name];
-  return res.sendError(AppError.error400('Pokemon ' + req.params.name + ' was deleted!'));
+pokeRouter.all('/', (req,res) => {
+  return res.sendError(AppError.error404('Unregistered location, please specify a pokemon at pokemon/name.'));
 });
