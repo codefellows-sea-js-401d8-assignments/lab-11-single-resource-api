@@ -185,4 +185,6 @@ describe('Route - Pokemon', () => {
         })
     ));
   });
+
+  after(() => mongoose.connection.close());
 });
