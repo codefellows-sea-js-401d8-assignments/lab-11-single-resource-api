@@ -14,4 +14,4 @@
 
 ## Bonus
 
-  I did both of the bonus things
+I did the bonus point
