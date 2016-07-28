@@ -20,4 +20,15 @@ heroRouter.get('/hero/:id', jsonParser, (req, res) => {
   });
 });
 
+heroRouter.put('/hero/:id', jsonParser, (req, res) => {
+  let reqJson = req.body;
+  if (reqJson.name) {
+    Hero.findByIdAndUpdate(req.params.id, {name: reqJson.name}, (err, hero) => {
+      if (err) throw err;
+      console.log('updated name to ' + hero.name);
+      res.json(hero);
+    });
+  }
+});
+
 module.exports = heroRouter;
