@@ -22,11 +22,11 @@ hitRouter.get('/:id', (req, res) => {
     return res.sendError(AppError.error404('get requested with no ID'));
 
   Hit.findById(_id, (err, hit) => {
-    if (err)
+    if (err) {
+      if (!hit)
+        return res.sendError(AppError.error404('get requested with invalid ID'));
       return res.sendError(err);
-
-    if (!hit)
-      return res.sendError(AppError.error404('get requested with invalid ID'));
+    }
 
     res.json(hit);
   });
@@ -52,18 +52,20 @@ hitRouter.put('/:id', bodyParser.json(), (req, res) => {
   if(!_id)
     return res.sendError(AppError.error404('put requested with no ID'));
 
-  if (Object.keys(req.body).length) {
-    Hit.findByIdAndUpdate(_id, req.body, (err, hit) => {
-      if (err)
-        return res.sendError(err);
+  if(!req.body)
+    return res.sendError(AppError.error400('post requested with no body'));
 
+  if(!req.body.name && !req.body.location && !req.body.location && !req.body.price)
+    return res.sendError(AppError.error400('post requested with invalid body'));
+
+  Hit.findByIdAndUpdate(_id, req.body, (err, hit) => {
+    if (err) {
       if (!hit)
         return res.sendError(AppError.error404('put requested with invalid ID'));
-
-      res.json(Hit.findOne({_id}));
-    });
-  }
-  return res.sendError(AppError.error400('no body specified or invalid body'));
+      return res.sendError(err);
+    }
+    res.send('successfully updated');
+  });
 });
 
 
@@ -73,12 +75,11 @@ hitRouter.delete('/:id', (req, res) => {
     return res.sendError(AppError.error404('delete requested with no ID'));
 
   Hit.findByIdAndRemove(_id, (err, hit) => {
-    if (err)
+    if (err) {
+      if (!hit)
+        return res.sendError(AppError.error404('delete requested with invalid ID'));
       return res.sendError(err);
-
-    if (!hit)
-      return res.sendError(AppError.error404('delete requested with invalid ID'));
-
+    }
     res.status(204).end();
   });
 });
