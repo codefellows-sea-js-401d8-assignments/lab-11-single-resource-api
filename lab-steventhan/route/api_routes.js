@@ -5,17 +5,7 @@ const Project = require('../model/project');
 
 let api = {};
 
-api.homepageGet = (req, res) => {
-  res.status(200).send('For project API, please go to /api/projects');
-};
 
-api.projectsGetAll = (req, res) => {
-  let projectsArray = [];
-  for (let key in api.projectsDatabase) {
-    projectsArray.push(api.projectsDatabase[key]);
-  }
-  res.status(200).json(projectsArray);
-};
 
 api.projectsGetById = (req, res) => {
   let projectId = req.params.id;
@@ -37,7 +27,7 @@ api.projectsGetById = (req, res) => {
   }
 };
 
-api.projectsPost = (req, res) => {
+api.projectsPost = (req, res, next) => {
   let responseJson = {};
   if (!req.body) {
     responseJson.status = 400;
@@ -48,14 +38,12 @@ api.projectsPost = (req, res) => {
   if (parsedJson.projectName !== undefined &&
       parsedJson.technology !== undefined &&
       parsedJson.github !== undefined) {
-    let project = new Project(parsedJson.projectName, parsedJson.technology, parsedJson.github);
-    while(api.projectsDatabase[project.id] !== undefined) {
-      project.getNewId();
-    }
-    api.projectsDatabase[project.id] = project;
-    responseJson.status = 200;
-    responseJson.msg = 'Success';
-    return res.status(responseJson.status).json(project);
+    let project = new Project(res.body);
+    debugger;
+    project.save((err, project) => {
+      if(err) return next(err);
+      return res.json(project);
+    });
   }
 
   responseJson.status = 400;

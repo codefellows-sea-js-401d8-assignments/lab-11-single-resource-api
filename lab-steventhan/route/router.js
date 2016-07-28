@@ -1,46 +1,52 @@
 'use strict';
 
 const Router = require('express').Router;
-const api = require('./api_routes');
 const bodyParser = require('body-parser').json();
 const AppError = require('../lib/app_error');
+const Project = require('../model/project');
 
-let router = new Router();
 
-router.get('/', (req, res) => {
-  api.homepageGet(req, res);
-});
+let projectRouter = new Router();
 
-router.get('/api/projects/all', (req, res) => {
-  api.projectsGetAll(req, res);
-});
-
-router.get('/api/projects', (req, res) => {
+projectRouter.get('/', (req, res) => {
   let error = AppError.new400('Connection at /api/projects without any id');
   res.sendError(error);
 });
 
-router.get('/api/projects/:id', (req, res) => {
-  api.projectsGetById(req, res);
+projectRouter.get('/all', (req, res, next) => {
+  Project.find({}, (err, projects) => {
+    if (err) return next(err);
+    return res.json(projects);
+  });
 });
 
-router.post('/api/projects', bodyParser, (req, res) => {
-  api.projectsPost(req, res);
+projectRouter.get('/:id', (req, res, next) => {
+
 });
 
-router.delete('/api/projects/:id', (req, res) => {
-  api.projectsDelete(req, res);
+projectRouter.post('/', bodyParser, (req, res, next) => {
+  let parsedJson = req.body;
+  if (parsedJson.projectName !== undefined &&
+      parsedJson.technology !== undefined &&
+      parsedJson.github !== undefined) {
+    let project = new Project({
+      projectName: parsedJson.projectName,
+      technology: parsedJson.technology,
+      github: parsedJson.github
+    });
+    project.save((err, project) => {
+      if(err) return next(err);
+      return res.json(project);
+    });
+  }});
+
+projectRouter.delete('/:id', (req, res) => {
+  // api.projectsDelete(req, res);
 });
 
-router.put('/api/projects/:id', (req, res) => {
-  api.projectsPut(req, res);
+projectRouter.put('/:id', (req, res) => {
+  // api.projectsPut(req, res);
 });
 
-router.get('*', (req, res) => {
-  let responseJson = {};
-  responseJson.status = 404;
-  responseJson.msg = '404 Not Found';
-  res.status(responseJson.status).json(responseJson);
-});
 
-module.exports = router;
+module.exports = projectRouter;
