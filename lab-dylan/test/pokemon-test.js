@@ -22,7 +22,6 @@ describe('Test crud', () => {
     });
   });
   after((done) => {
-    console.log('ending');
     mongoose.connection.db.dropDatabase(() => {
       server.close();
       done();
@@ -45,7 +44,7 @@ describe('Test crud', () => {
   });
 });
 
-describe('CRUD U Test', () => {
+describe('CRUD altering pokemon tests', () => {
   let testPokemon;
   before((done) => {
     server = app.listen(5000, () => {
@@ -75,4 +74,18 @@ describe('CRUD U Test', () => {
         done();
       });
   });
+
+  it('should PUT a pokemon', (done) => {
+    testPokemon.number = 50;
+    request('localhost:5000')
+      .put('/api/pokemon/' + testPokemon._id)
+      .send(testPokemon)
+      .end((err, res) => {
+        expect(err).to.eql(null);
+        expect(res.status).to.eql(200);
+        done();
+      });
+  });
 });
+
+describe('CRUD ')

@@ -16,7 +16,6 @@ pokemonRouter.get('/:id', (req, res, next) => {
     _id
   }, (err, pokemon) => {
     if (err) res.sendError(err, req, res, next);
-    // appError(404, 'Invalid request for ' + pokemon, next)(err);
     res.json(pokemon);
   });
 });
@@ -36,7 +35,6 @@ pokemonRouter.post('/', jsonParser, (req, res, next) => {
     let newPokemon = new Pokemon(req.body);
     newPokemon.save((err, pokemon) => {
       if (err) return next(err);
-      // if (err) appError(400, 'bad request', next)(err);
       res.json(pokemon);
     });
   }
@@ -48,7 +46,6 @@ pokemonRouter.put('/:id', jsonParser, (req, res, next) => {
     '_id': req.params.id
   }, req.body, (err) => {
     if (err.error.type === 'AppError') return next(err);
-    // if (err)
     res.json({
       message: 'success'
     });

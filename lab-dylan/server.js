@@ -17,12 +17,11 @@ app.use(morgan('dev'));
 app.use('/api/pokemon', pokemonRouter);
 
 app.use((err, req, res, next) => {
-  if (err.error.type === 'AppError') res.send(err.error.message);
+  if (err && err.status !== 500) res.sendError(err);
   next();
 });
 
 app.use((req, res) => {
-  // let err = new AppError(new Error(), 404, 'Route not found');
   res.json({res});
 });
 
