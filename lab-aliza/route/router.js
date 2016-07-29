@@ -1,64 +1,58 @@
 'use strict';
 
-const express = require('express');
-const bodyParser = require('body-parser');
-const jsonParser = bodyParser.json();
-const User = require('../model/userschema');
+const Router = require('express').Router;
 const debug = require('debug');
 const serverlog = debug('serverlog');
-const appError = require('../lib/apperror');
-const router = module.exports = exports = express.Router();
+const appError = require('../model/AppError');
+const User = require('../model/userconstructor');
+let router = Router();
+var bodyParser = require('body-parser');
 router.use(bodyParser.json());
+let jsonParser = bodyParser.json();
+const errResponse = require('../model/errorresponse');
 
-router.get('/user/:id', (err, req, res, next) => {
+router.get('/user/:id', (req, res) => {
   let _id = req.params.id;
-  serverlog('id: ', req.params.id);
-  User.findOne({
-    _id
-  }, (err, users) => {
-    if (err) return next(appError.error404('404').respond(res));
+  User.findOne({_id}, (err, users) => {
+    if (err) return errResponse(appError.error404('404').respond(res));
     serverlog('users: ', users);
-    res.json(users);
+    res.status(200).json(users);
   });
 });
 
-router.get('/all', (err, req, res, next) => {
+router.get('/all', (req, res) => {
   User.find({}, (err, users) => {
-    if (err) return next(appError.error404('404').respond(res));
-    res.json(users);
-    serverlog('users: ', req.params.id);
+    if (err) return errResponse(appError.error404('404').respond(res));
+    res.status(200).json(users);
+    serverlog('users: ', users);
   });
 });
 
-router.post('/user', jsonParser, (err, req, res, next) => {
+router.post('/user', jsonParser, (req, res) => {
   let newUser = new User(req.body);
   newUser.save((err, user) => {
-    if (err) return next(appError.error404('404').respond(res));
-    res.json(user);
+    if (err) return errResponse(appError.error404('404').respond(res));
+    res.status(200).json(user);
     serverlog('user: ', user);
   });
 });
 
-router.put('/user/:id', (err, req, res, next) => {
+router.put('/user/:id', (req, res) => {
   User.findOneAndUpdate({
     '_id': req.params.id
   }, req.body, (err) => {
-    if (err) return next(appError.error404('404 not found').respond(res));
-    res.json({
-      message: 'success'
-    });
-    serverlog('req body: ', req.body);
+    if (err) return errResponse(appError.error404('404 not found').respond(res));
+    res.status(200).json(res);
+    serverlog('updated user: ', req.body);
   });
 });
 
-router.delete('/user/:id', (err, req, res, next) => {
+router.delete('/user/:id', (req, res) => {
   let _id = req.params.id;
   serverlog('id: ', req.params.id);
   User.findOneAndRemove({_id}, (err)=>{
-    if (err) return next(appError.error404('404 not found').respond(res));
-    res.json({
-      message: 'success'
-    });
+    if (err) return errResponse(appError.error404('404 not found').respond(res));
+    res.status(200).json(res);
   });
 });
 
