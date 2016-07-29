@@ -44,7 +44,7 @@ gulp.task('test', () => {
 
 gulp.task('nodemon-restart', () =>{
   nodemon({
-    script: './lib/server.js',
+    script: './lib/server_gulp.js',
     ext: 'js html',
     env: {'NODE-ENV': 'development'}
   });

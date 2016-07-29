@@ -8,9 +8,7 @@ const AppError = require('../lib/app_error.js');
 let pokeRouter = module.exports = exports = new Router();
 
 pokeRouter.get('/all', (req, res) => {
-  console.log('get all');
   PokeModel.find({}, (err, pokemons) => {
-    console.log('finding');
     if (err) return (err);
     return res.json(pokemons);
   });
@@ -19,7 +17,6 @@ pokeRouter.get('/all', (req, res) => {
 pokeRouter.get('/:name', (req, res) => {
   let name = req.params.name;
   PokeModel.findOne({name}, (err, p) => {
-    console.log(p);
     if(p != null){
       if (err) return (err);
       return res.json(p);
@@ -53,10 +50,8 @@ pokeRouter.put('/:name', jsonParser, (req, res) => {
   PokeModel.findOne({
     name: name
   }, (err, p) => {
-    console.log('find');
     if (p != null) {
-      PokeModel.findOneAndUpdate({name: name}, req.body, (err) => {
-        if (err) return next(err);
+      PokeModel.findOneAndUpdate({name: name}, req.body, () => {
         res.send('Pokemon ' + name + ' updated!');
       });
     } else{
@@ -69,8 +64,7 @@ pokeRouter.delete('/:name', (req, res) => {
   let name = req.params.name;
   PokeModel.findOne({name: name}, (err, p) => {
     if (p != null) {
-      PokeModel.remove({name}, (err, poke) =>{
-        // if (err) return next(err);
+      PokeModel.remove({name}, () =>{
         res.send('Pokemon ' + name + ' was deleted!');
       });
     } else{
@@ -80,5 +74,5 @@ pokeRouter.delete('/:name', (req, res) => {
 });
 
 pokeRouter.all('/', (req,res) => {
-  return res.sendError(AppError.error404('Unregistered location, please specify a pokemon at pokemon/name.'));
+  return res.sendError(AppError.error400('Unregistered location, please specify a pokemon at pokemon/name.'));
 });
