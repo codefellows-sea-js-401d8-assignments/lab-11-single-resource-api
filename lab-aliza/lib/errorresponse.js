@@ -1,6 +1,6 @@
 'use strict';
 
-const Error = require('./AppError');
+const Error = require('./apperror');
 
 const errorResponse = function() {
   return (err, req, res, next) => {
