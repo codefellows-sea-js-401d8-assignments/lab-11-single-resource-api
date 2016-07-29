@@ -1,39 +1,37 @@
 const supertest = require('supertest-as-promised');
 const expect = require('chai').expect;
 
-const Pokemon = require('../../lib/models/pokemon');
+const Trainer = require('../../lib/models/trainer');
 const server = require('../../lib/server');
 
-describe('/api/pokemon', () => {
+describe('/api/trainer', () => {
   beforeEach(function() {
-    return new Pokemon({
-      name: 'Bulbasaur',
-      number: 1,
-      height: 7,
+    return new Trainer({
+      name: 'Gio',
+      photo: 'https://avatars3.githubusercontent.com/u/441646?v=3&s=460',
     }).save()
-      .then((pokemon) => {
-        this.id = pokemon.id;
+      .then((trainer) => {
+        this.id = trainer.id;
       });
   });
 
-  afterEach(() => Pokemon.remove({}));
+  afterEach(() => Trainer.remove({}));
 
   describe('GET', () => {
-    it('Get existing pokemon', function() {
+    it('Get existing trainer', function() {
       return supertest(server)
-        .get(`/api/pokemon/${this.id}`)
+        .get(`/api/trainer/${this.id}`)
         .expect(200)
         .expect('Content-Type', /json/)
         .expect((res) => {
-          expect(res.body.name).to.equal('Bulbasaur');
-          expect(res.body.number).to.equal(1);
-          expect(res.body.height).to.equal(7);
+          expect(res.body.name).to.equal('Gio');
+          expect(res.body.photo).to.equal('https://avatars3.githubusercontent.com/u/441646?v=3&s=460');
         });
     });
 
-    it('List all pokemon', () => (
+    it('List all trainer', () => (
       supertest(server)
-        .get('/api/pokemon/all')
+        .get('/api/trainer/all')
         .expect(200)
         .expect('Content-Type', /json/)
         .expect((res) => {
@@ -41,9 +39,9 @@ describe('/api/pokemon', () => {
         })
     ));
 
-    it('Get pokemon that does not exist', () => (
+    it('Get trainer that does not exist', () => (
       supertest(server)
-        .get('/api/pokemon/IAmNotAValidId')
+        .get('/api/trainer/IAmNotAValidId')
         .expect(404)
         .expect('Content-Type', /json/)
         .expect((res) => {
@@ -53,36 +51,35 @@ describe('/api/pokemon', () => {
         })
     ));
 
-    it('Get pokemon without sending id', () => (
+    it('Get trainer without sending id', () => (
       supertest(server)
-        .get('/api/pokemon')
+        .get('/api/trainer')
         .expect(400)
         .expect('Content-Type', /json/)
         .expect({
-          error: 'No pokemon id sent',
+          error: 'No trainer id sent',
         })
     ));
   });
 
   describe('PUT', () => {
-    it('Update existing pokemon', function() {
+    it('Update existing trainer', function() {
       return supertest(server)
-        .put(`/api/pokemon/${this.id}`)
+        .put(`/api/trainer/${this.id}`)
         .send({
-          height: 9001,
+          name: 'Giovanni d\'Amelio',
         })
         .expect(200)
         .expect('Content-Type', /json/)
         .expect((res) => {
-          expect(res.body.name).to.equal('Bulbasaur');
-          expect(res.body.number).to.equal(1);
-          expect(res.body.height).to.equal(9001);
+          expect(res.body.name).to.equal('Giovanni d\'Amelio');
+          expect(res.body.photo).to.equal('https://avatars3.githubusercontent.com/u/441646?v=3&s=460');
         });
     });
 
-    it('Update pokemon that does not exist', () => (
+    it('Update trainer that does not exist', () => (
       supertest(server)
-        .put('/api/pokemon/HahaIDoNotExist')
+        .put('/api/trainer/HahaIDoNotExist')
         .send({
           height: 9001,
         })
@@ -95,69 +92,62 @@ describe('/api/pokemon', () => {
         })
     ));
 
-    it('Update pokemon without sending id', () => (
+    it('Update trainer without sending id', () => (
       supertest(server)
-        .put('/api/pokemon')
+        .put('/api/trainer')
         .send({
           height: 9001,
         })
         .expect(400)
         .expect('Content-Type', /json/)
         .expect({
-          error: 'No pokemon id sent',
+          error: 'No trainer id sent',
         })
     ));
   });
 
   describe('POST', () => {
-    it('Create new pokemon', () => (
+    it('Create new trainer', () => (
       supertest(server)
-        .post('/api/pokemon')
+        .post('/api/trainer')
         .send({
-          name: 'Ivysaur',
-          number: 2,
-          height: 10,
+          name: 'Tracey Radcliffe',
         })
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
-          expect(res.body.name).to.equal('Ivysaur');
-          expect(res.body.number).to.equal(2);
-          expect(res.body.height).to.equal(10);
+          expect(res.body.name).to.equal('Tracey Radcliffe');
         })
     ));
 
-    it('Create new pokemon without enough data', () => (
+    it('Create new trainer without enough data', () => (
       supertest(server)
-        .post('/api/pokemon')
+        .post('/api/trainer')
         .send({
-          name: 'Bulbasaur',
-          number: 1,
+          photo: 'HAHA.jpg',
         })
         .expect('Content-Type', /json/)
         .expect(400)
         .expect({
-          error: 'Insufficent data to create new pokemon',
+          error: 'Insufficent data to create new trainer',
         })
     ));
   });
 
   describe('DELETE', () => {
-    it('Delete existing pokemon', function() {
+    it('Delete existing trainer', function() {
       return supertest(server)
-        .delete(`/api/pokemon/${this.id}`)
+        .delete(`/api/trainer/${this.id}`)
         .expect(200)
         .expect('Content-Type', /json/)
         .expect((res) => {
-          expect(res.body.name).to.equal('Bulbasaur');
-          expect(res.body.number).to.equal(1);
-          expect(res.body.height).to.equal(7);
+          expect(res.body.name).to.equal('Gio');
         });
     });
 
-    it('Delete pokemon that does not exist', () => (
+    it('Delete trainer that does not exist', () => (
       supertest(server)
-        .delete('/api/pokemon/IAmNotAnId')
+        .delete('/api/trainer/IAmNotAnId')
         .expect(404)
         .expect('Content-Type', /json/)
         .expect((res) => {
@@ -167,13 +157,13 @@ describe('/api/pokemon', () => {
         })
     ));
 
-    it('Delete pokemon without sending id', () => (
+    it('Delete trainer without sending id', () => (
       supertest(server)
-        .delete('/api/pokemon')
+        .delete('/api/trainer')
         .expect(400)
         .expect('Content-Type', /json/)
         .expect({
-          error: 'No pokemon id sent',
+          error: 'No trainer id sent',
         })
     ));
   });

@@ -12,6 +12,7 @@ server.use(morgan('dev'));
 
 // Setup our resource routes
 server.use('/api/pokemon', require('./routes/pokemon'));
+server.use('/api/trainer', require('./routes/trainer'));
 
 // Throw an error to allow us to test our error handling
 server.get('/500', () => {
