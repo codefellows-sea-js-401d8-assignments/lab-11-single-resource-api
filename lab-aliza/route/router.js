@@ -3,13 +3,13 @@
 const Router = require('express').Router;
 const debug = require('debug');
 const serverlog = debug('serverlog');
-const appError = require('../model/apperror');
+const appError = require('../lib/apperror');
 const User = require('../model/userconstructor');
 let router = Router();
 var bodyParser = require('body-parser');
 router.use(bodyParser.json());
 let jsonParser = bodyParser.json();
-const errResponse = require('../model/errorresponse');
+const errResponse = require('../lib/errorresponse');
 
 router.get('/user/:id', (req, res) => {
   let _id = req.params.id;
