@@ -4,7 +4,7 @@ const Router = require('express').Router;
 const debug = require('debug');
 const serverlog = debug('serverlog');
 const appError = require('../lib/apperror');
-const User = require('../model/userconstructor');
+const User = require('../model/userschema');
 let router = Router();
 var bodyParser = require('body-parser');
 router.use(bodyParser.json());
