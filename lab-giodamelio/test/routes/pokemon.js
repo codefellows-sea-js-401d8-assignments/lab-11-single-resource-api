@@ -3,6 +3,7 @@ const expect = require('chai').expect;
 const mongoose = require('mongoose');
 
 const Pokemon = require('../../lib/models/pokemon');
+const server = require('../../lib/server');
 
 mongoose.Promise = global.Promise; // Make mongoose use native promises
 mongoose.connect('mongodb://localhost/pokemon_test');
@@ -10,9 +11,7 @@ mongoose.connect('mongodb://localhost/pokemon_test');
 process.env.DEBUG = ''; // Hide debug messages during the tests
 process.env.NODE_ENV = 'testing'; // Hide morgan routes
 
-const server = require('../../lib/server');
-
-describe('Route - Pokemon', () => {
+describe('/api/pokemon', () => {
   beforeEach(function() {
     return new Pokemon({
       name: 'Bulbasaur',
