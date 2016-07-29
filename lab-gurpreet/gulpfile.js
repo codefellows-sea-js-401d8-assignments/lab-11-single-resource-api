@@ -47,7 +47,7 @@ gulp.task('lint', () => {
       },
       extends: 'eslint:recommended'
     }))
-        .pipe(eslint.format());
+    .pipe(eslint.format());
 });
 
 gulp.task('test', () => {

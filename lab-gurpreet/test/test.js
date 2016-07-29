@@ -25,17 +25,17 @@ describe('Test CRUD', () => {
 
   it('should POST', (done) => {
     request('localhost:3000')
-    .post('/api/user')
-    .send({
-      name: 'testname',
-      active: true,
-      year_added: 2016
-    })
-    .end((err, res) => {
-      expect(err).to.eql(null);
-      expect(res).to.have.status(200);
-      done();
-    });
+      .post('/api/user')
+      .send({
+        name: 'testname',
+        active: true,
+        year_added: 2016
+      })
+      .end((err, res) => {
+        expect(err).to.eql(null);
+        expect(res).to.have.status(200);
+        done();
+      });
   });
 });
 
@@ -63,11 +63,11 @@ describe('Testing CRUD', () => {
   });
   it('should GET a user', (done) => {
     request('localhost:3000')
-    .get('/api/user/' + testUser._id)
-    .end((err, res) => {
-      expect(err).to.eql(null);
-      expect(res.body.year_added).to.eql(2016);
-      done();
-    });
+      .get('/api/user/' + testUser._id)
+      .end((err, res) => {
+        expect(err).to.eql(null);
+        expect(res.body.year_added).to.eql(2016);
+        done();
+      });
   });
 });
