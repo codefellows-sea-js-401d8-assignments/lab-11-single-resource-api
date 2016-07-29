@@ -14,4 +14,7 @@ module.exports = mongoose.model('Pokemon', {
     type: Number,
     required: true,
   },
+  trainerId: {
+    type: mongoose.Schema.ObjectId,
+  },
 });
