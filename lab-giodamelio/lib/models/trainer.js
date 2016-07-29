@@ -39,7 +39,7 @@ trainerSchema.methods.removePokemon = function(pokemonId) {
   });
 };
 
-trainerSchema.findAllPokemon = function() {
+trainerSchema.methods.findAllPokemon = function() {
   return Pokemon.find({
     trainerId: this._id,
   });

@@ -21,6 +21,7 @@ server.get('/500', () => {
 
 // Catch errors
 server.use((err, req, res, next) => { // eslint-disable-line
+  console.log(err);
   res.sendError(err);
 });
 

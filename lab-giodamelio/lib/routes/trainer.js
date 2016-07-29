@@ -74,4 +74,6 @@ router.delete('/', (req, res) => {
   res.sendError(new AppError(400, 'No trainer id sent'));
 });
 
+router.use('/:trainerId/pokemon', require('./trainer_pokemon'));
+
 module.exports = router;

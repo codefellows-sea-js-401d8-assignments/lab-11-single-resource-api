@@ -1,5 +1,6 @@
-const server = require('./server');
 const mongoose = require('mongoose');
+
+const server = require('./server');
 
 mongoose.Promise = global.Promise; // Make mongoose use native promises
 mongoose.connect('mongodb://localhost/pokemon');

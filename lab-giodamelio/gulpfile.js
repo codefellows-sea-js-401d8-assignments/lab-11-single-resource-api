@@ -56,6 +56,12 @@ gulp.task('test', ['pre-test'], () => (
     }))
     .pipe(istanbul.writeReports())
     .pipe(istanbul.enforceThresholds({ thresholds: { global: 90 } }))
+    .once('error', () => {
+      process.exit(1);
+    })
+    .once('end', () => {
+      process.exit();
+    })
 ));
 
 gulp.task('test:watch', ['test'], () => {
