@@ -1,16 +1,15 @@
 'use strict';
+const AppError = require('./app-error');
 
 module.exports = exports = function() {
   return (req, res, next) => {
     res.sendError = function(error) {
-      if (error.type === 'AppError') {
+      if (AppError.isAppError(error)) {
         console.log('encountered AppError');
-        return res.status(error.statusCode).send(error.message);
+        return res.status(error.statusCode).send(error.responseMessage);
       }
-      if (error.type !== 'AppError') {
-        console.log('not an AppError');
-        return res.status(500).send(error.message);
-      }
+      console.log('not an AppError');
+      return res.status(500).send(error.message);
     };
     next();
   };

@@ -4,7 +4,10 @@ let AppError = module.exports = exports = function(message, statusCode, response
   this.message = message;
   this.statusCode = statusCode;
   this.responseMessage = responseMessage;
-  this.type = 'AppError';
+};
+
+AppError.isAppError = function(err) {
+  return err instanceof AppError;
 };
 
 AppError.status400 = function() {
@@ -12,7 +15,7 @@ AppError.status400 = function() {
 };
 
 AppError.status404 = function() {
-  return new AppError('not there', 404, 'that page does not exist');
+  return new AppError('not there', 404, 'that page was not found');
 };
 
 AppError.status500 = function() {
