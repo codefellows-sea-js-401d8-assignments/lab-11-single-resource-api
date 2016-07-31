@@ -7,7 +7,7 @@ const Hero = require('../model/hero');
 
 heroRouter.get('/hero', (req, res) => {
   Hero.find({}, (err, hero) => {
-    if (err) throw err;
+    if (err) return res.sendError(AppError.status400('bad request'));
     res.json(hero);
   });
 });
@@ -27,7 +27,7 @@ heroRouter.get('/hero/:id', jsonParser, (req, res) => {
 heroRouter.post('/hero', jsonParser, (req, res) => {
   let newHero = Hero(req.body);
   newHero.save((err, hero) => {
-    if (err) throw err;
+    if (err) return res.sendError(AppError.status400('bad request'));
     console.log('created new hero under id: ' + newHero.id);
     res.json(hero);
   });
