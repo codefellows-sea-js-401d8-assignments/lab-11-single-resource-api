@@ -50,7 +50,7 @@ hitRouter.put('/:id', jsonParser, (req, res) => {
   if(!req.body)
     return res.sendError(AppError.error400('put requested with no body'));
 
-  if(!req.body.name && !req.body.location && !req.body.location && !req.body.price && !req.body.hitlistId)
+  if(!req.body.name && !req.body.location && !req.body.price && !req.body.hitlistId)
     return res.sendError(AppError.error400('put requested with invalid body'));
 
   Hit.findByIdAndUpdate(_id, req.body, (err, hit) => {
