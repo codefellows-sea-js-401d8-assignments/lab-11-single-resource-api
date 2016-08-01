@@ -11,7 +11,7 @@ const port = 3000;
 
 mongoose.connect(DB_SERVER);
 
-app.use('/api/user', router);
+app.use('/api', router);
 
 app.listen(port, () => {
   console.log('app listening on port ' + port);

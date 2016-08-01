@@ -40,9 +40,8 @@ router.get('/user/:id', (req, res) => {
   });
 });
 
-router.post('/users', (req, res) => {
-  let newUser = new User();
-  req.body = newUser;
+router.post('/user', jsonParser, (req, res) => {
+  let newUser = new User(req.body);
   newUser.save((err, user) => {
     if (err) return errResponse(AppError.error404('404').respond(res));
     res.status(200).send(user);
@@ -52,21 +51,26 @@ router.post('/users', (req, res) => {
 
 router.put('/user/:id', (req, res) => {
   User.findOneAndUpdate({
-    '_id': req.params.id
-  })
-  .exec((err, users) => {
+    _id: req.params.id
+  },
+    { $set: {
+      name: req.body.name,
+      active: req.body.active,
+      date: req.body.date
+    }
+  }, {upsert: true}, (err, newUser) => {
     if (err) return errResponse(AppError.error404('404').respond(res));
-    serverlog('users: ', users);
-    res.status(200).json(users);
+    res.status(200).send(newUser);
+    serverlog('updated user: ', newUser);
   });
 });
 
 router.delete('/user/:id', (req, res) => {
-  let _id = req.params.id;
-  serverlog('id: ', req.params.id);
-  User.findOneAndRemove({_id}, (err)=>{
-    if (err) return errResponse(AppError.error404('404 not found').respond(res));
-    res.status(200).json(res);
+  User.findOneAndRemove({
+    _id: req.params.id
+  }, (err, user) => {
+    if(err) return errResponse(AppError.error404('404').respond(res));
+    return res.status(204).json(user);
   });
 });
 
