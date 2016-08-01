@@ -7,32 +7,45 @@ const AppError = require('../lib/apperror');
 const User = require('../model/userschema');
 let router = Router();
 var bodyParser = require('body-parser');
-router.use(bodyParser.json());
 let jsonParser = bodyParser.json();
+let urlParser = bodyParser.urlencoded({
+  extended: true
+});
+router.use(jsonParser);
+router.use(urlParser);
 const errResponse = require('../lib/errorresponse');
 
-router.get('/user/:id', (req, res) => {
-  let _id = req.params.id;
-  User.findOne({_id}, (err, users) => {
-    if (err) return errResponse(AppError.error404('404').respond(res));
-    serverlog('users: ', users);
-    res.status(200).json(users);
-  });
+router.get('/', (req, res) => {
+  res.send('User DB');
 });
 
 router.get('/all', (req, res) => {
-  User.find({}, (err, users) => {
+  User.find({})
+  .exec((err, users) => {
     if (err) return errResponse(AppError.error404('404').respond(res));
     res.status(200).json(users);
     serverlog('users: ', users);
   });
 });
 
-router.post('/user', jsonParser, (req, res) => {
-  let newUser = new User(req.body);
+router.get('/user/:id', (req, res) => {
+  console.log('getting user ' + req.params.id);
+  User.findOne({
+    _id: req.params.id
+  })
+  .exec((err, users) => {
+    if (err) return errResponse(AppError.error404('404').respond(res));
+    serverlog('users: ', users);
+    res.status(200).json(users);
+  });
+});
+
+router.post('/users', (req, res) => {
+  let newUser = new User();
+  req.body = newUser;
   newUser.save((err, user) => {
     if (err) return errResponse(AppError.error404('404').respond(res));
-    res.status(200).json(user);
+    res.status(200).send(user);
     serverlog('user: ', user);
   });
 });
@@ -40,10 +53,11 @@ router.post('/user', jsonParser, (req, res) => {
 router.put('/user/:id', (req, res) => {
   User.findOneAndUpdate({
     '_id': req.params.id
-  }, req.body, (err) => {
-    if (err) return errResponse(AppError.error404('404 not found').respond(res));
-    res.status(200).json(res);
-    serverlog('updated user: ', req.body);
+  })
+  .exec((err, users) => {
+    if (err) return errResponse(AppError.error404('404').respond(res));
+    serverlog('users: ', users);
+    res.status(200).json(users);
   });
 });
 
