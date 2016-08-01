@@ -7,7 +7,7 @@ const request = chai.request;
 const expect = chai.expect;
 
 const mongoose = require('mongoose');
-const User = require('../model/userschema');
+const Panda = require('../model/pandaschema');
 var app = require('../server');
 let server;
 
@@ -15,18 +15,18 @@ const TEST_DB_SERVER = 'mongodb://localhost/test_db';
 process.env.DB_SERVER = TEST_DB_SERVER;
 
 describe('Test CRUD ', () => {
-  let testUser;
+  let testPanda;
   before((done) => {
-    server = app.listen(3000, () => {
-      console.log('up on 3000');
+    server = app.listen(5000, () => {
+      console.log('up on 5000');
     });
-    testUser = User({
+    testPanda = Panda({
       name: 'aliza',
-      active: true,
-      date: 2016
+      age: 27,
+      happy: true
     });
-    testUser.save((err, user) => {
-      testUser = user;
+    testPanda.save((err, panda) => {
+      testPanda = panda;
       done();
     });
   });
@@ -37,42 +37,101 @@ describe('Test CRUD ', () => {
     });
   });
 
-  it('should POST', (done) => {
-    request('localhost:3000')
-      .post('/api/user')
+  it('POST 200', (done) => {
+    request('localhost:5000')
+      .post('/api/panda')
       .send({
-        name: 'testname',
-        active: true,
-        date: 2016
+        name: 'aliza',
+        age: 27,
+        happy: true
       })
       .end((err, res) => {
-        // expect(err).to.eql(null);
+        expect(err).to.eql(null);
         expect(res).to.have.status(200);
         done();
       });
   });
 
-  it('should GET a user', (done) => {
-    request('localhost:3000')
-      .get('/api/user/' + testUser._id)
+  it('POST 400', (done) => {
+    request('localhost:5000')
+      .post('/api/panda')
+      .send({blah:'blah'})
       .end((err, res) => {
-        // expect(err).to.eql(null);
-        expect(res.body.date).to.eql(2016);
+        expect(res).to.have.status(400);
         done();
       });
   });
 
-  it('should PUT', (done) => {
-    request('localhost:3000')
-      .put('/api/user/' + testUser._id)
+  it('GET 200', (done) => {
+    request('localhost:5000')
+      .get('/api/panda/' + testPanda._id)
+      .end((err, res) => {
+        expect(err).to.eql(null);
+        expect(res.body.age).to.eql(27);
+        done();
+      });
+  });
+
+  it('GET 404', (done) => {
+    request('localhost:5000')
+      .get('/api/panda')
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+        done();
+      });
+  });
+
+  it('PUT 200', (done) => {
+    request('localhost:5000')
+      .put('/api/panda/' + testPanda._id)
       .send({
-        name: 'testname',
-        active: true,
-        date: 2016
+        name: 'tyler',
+        age: 87,
+        happy: false
       })
       .end((err, res) => {
-        // expect(err).to.eql(null);
+        expect(err).to.eql(null);
         expect(res).to.have.status(200);
+        done();
+      });
+  });
+
+  it('PUT 400', (done) => {
+    request('localhost:5000')
+      .put('/api/panda/' + testPanda._id)
+      .send()
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        done();
+      });
+  });
+  it('PUT 404', (done) => {
+    request('localhost:5000')
+      .put('/api/panda/')
+      .send({
+        name: 'tyler',
+        age: 87,
+        happy: false
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+        done();
+      });
+  });
+  it('DELETE 204', (done) => {
+    request('localhost:5000')
+      .delete('/api/panda/' + testPanda._id)
+      .end((err, res) => {
+        expect(err).to.eql(null);
+        expect(res).to.have.status(204);
+        done();
+      });
+  });
+  it('DELETE 404', (done) => {
+    request('localhost:5000')
+      .delete('/api/panda/')
+      .end((err, res) => {
+        expect(res).to.have.status(404);
         done();
       });
   });

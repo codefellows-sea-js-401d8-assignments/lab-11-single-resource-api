@@ -4,7 +4,7 @@ const Router = require('express').Router;
 const debug = require('debug');
 const serverlog = debug('serverlog');
 const AppError = require('../lib/apperror');
-const User = require('../model/userschema');
+const Panda = require('../model/pandaschema');
 let router = Router();
 var bodyParser = require('body-parser');
 let jsonParser = bodyParser.json();
@@ -16,61 +16,61 @@ router.use(urlParser);
 const errResponse = require('../lib/errorresponse');
 
 router.get('/', (req, res) => {
-  res.send('User DB');
+  res.send('Panda DB. Enter /api/panda/<id> or /api/all');
 });
 
 router.get('/all', (req, res) => {
-  User.find({})
-  .exec((err, users) => {
+  Panda.find({})
+  .exec((err, pandas) => {
     if (err) return errResponse(AppError.error404('404').respond(res));
-    res.status(200).json(users);
-    serverlog('users: ', users);
+    res.status(200).json(pandas);
+    serverlog('pandas: ', pandas);
   });
 });
 
-router.get('/user/:id', (req, res) => {
-  console.log('getting user ' + req.params.id);
-  User.findOne({
+router.get('/panda/:id', (req, res) => {
+  Panda.findOne({
     _id: req.params.id
   })
-  .exec((err, users) => {
+  .exec((err, pandas) => {
     if (err) return errResponse(AppError.error404('404').respond(res));
-    serverlog('users: ', users);
-    res.status(200).json(users);
+    serverlog('pandas: ', pandas);
+    res.status(200).json(pandas);
   });
 });
 
-router.post('/user', jsonParser, (req, res) => {
-  let newUser = new User(req.body);
-  newUser.save((err, user) => {
-    if (err) return errResponse(AppError.error404('404').respond(res));
-    res.status(200).send(user);
-    serverlog('user: ', user);
+router.post('/panda', jsonParser, (req, res) => {
+  let newPanda = new Panda(req.body);
+  newPanda.save((err, panda) => {
+    if (err) return errResponse(AppError.error400('400').respond(res));
+    serverlog('panda: ', panda);
+    return res.status(200).send(panda);
   });
 });
 
-router.put('/user/:id', (req, res) => {
-  User.findOneAndUpdate({
+router.put('/panda/:id', jsonParser, (req, res) => {
+  Panda.findOneAndUpdate({
     _id: req.params.id
   },
     { $set: {
       name: req.body.name,
-      active: req.body.active,
-      date: req.body.date
+      age: req.body.age,
+      happy: req.body.happy
     }
-  }, {upsert: true}, (err, newUser) => {
-    if (err) return errResponse(AppError.error404('404').respond(res));
-    res.status(200).send(newUser);
-    serverlog('updated user: ', newUser);
+  }, {upsert: true}, (err, newPanda) => {
+    if (err) return errResponse(AppError.error400('400').respond(res));
+    if (!req.params.id) return errResponse(AppError.error404('404').respond(res));
+    res.status(200).send(newPanda);
+    serverlog('updated panda: ', newPanda);
   });
 });
 
-router.delete('/user/:id', (req, res) => {
-  User.findOneAndRemove({
+router.delete('/panda/:id', (req, res) => {
+  Panda.findOneAndRemove({
     _id: req.params.id
-  }, (err, user) => {
+  }, (err, panda) => {
     if(err) return errResponse(AppError.error404('404').respond(res));
-    return res.status(204).json(user);
+    return res.status(204).json(panda);
   });
 });
 
