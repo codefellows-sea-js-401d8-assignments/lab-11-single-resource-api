@@ -7,6 +7,7 @@ const debug = require('debug')('movie:server');
 const morgan = require('morgan');
 const errorResponse = require('./lib/error-response');
 const hitRouter = require('./route/hit-route');
+const hitlistRouter = require('./route/hitlist-route');
 const AppError = require('./lib/AppError');
 
 const PORT = process.argv[2] || process.env.PORT || 3000;
@@ -20,6 +21,8 @@ mongoose.connect(DB_SERVER);
 server.use(morgan('dev'));
 server.use(errorResponse());
 server.use('/api/hit', hitRouter);
+server.use('/api/hitlist', hitlistRouter);
+
 
 server.all('*', (req, res) => {
   debug('*:404');
