@@ -21,34 +21,44 @@ describe('routing', function() {
     server.close();
     done();
   });
-  it('should handle unregistered routes', function(done) {
+
+  it('Should handle unregistered GET requests', function(done) {
     request('localhost:' + serverPort)
-    .get('/noob')
-    .end(function(res){
-      expect(res).to.have.status(404);
+    .get('/api/undefinedRoute')
+    .end(function(err){
+      expect(err).to.have.status(400);
       done();
     });
   });
-});
 
-// describe('routing with data present', () => {
-//   let testPokemon;
-//   before((done) => {
-//     testPokemon = Pokemon({
-//       pokeName: 'test Pokemon',
-//       pokeType: 'test Type'
-//     });
-//     testPokemon.save((err, pokemon) => {
-//       testPokemon = pokemon;
-//       done();
-//     });
-//   });
-//   it('should GET a single pokemon', (done) => {
-//     request('localhost:' + serverPort)
-//       .get('/api/pokemon/' + testPokemon._id)
-//       .end((res) => {
-//         expect(res).to.have.status(200);
-//         done();
-//       });
-//   });
-// });
+  it('Should handle registered GET requests', function(done) {
+    request('localhost:' + serverPort)
+    .get('/api/pokemon/dataGoesHere')
+    .end(function(err, res){
+      expect(res).to.have.status(200);
+      done();
+    });
+  });
+
+  // describe('routing with data present', () => {
+  //   let testPokemon;
+  //   before((done) => {
+  //     testPokemon = Pokemon({
+  //       pokeName: 'test Pokemon',
+  //       pokeType: 'test Type'
+  //     });
+  //     testPokemon.save((err, pokemon) => {
+  //       testPokemon = pokemon;
+  //       done();
+  //     });
+  //   });
+  //   it('should GET a single pokemon', (done) => {
+  //     request('localhost:' + serverPort)
+  //       .get('/api/pokemon/' + testPokemon._id)
+  //       .end((res) => {
+  //         expect(res).to.have.status(200);
+  //         done();
+  //       });
+  //   });
+  // });
+});

@@ -21,16 +21,16 @@ app.use('/api', pokemonRouter);
 
 app.get('*', (req, res, next) => {
   let handledError = new Error();
-  handledError.status = 404;
+  handledError.status = 400;
   next(handledError);
 });
 
 app.use((err, req, res, next) => {
-  if (err.status !== 404) {
+  if (err.status !== 400) {
     return next();
   }
-  res.status(404).json('Page not found...');
-  res.end();
+  res.status(400).send(err.message || 'Invalid request, please try again.');
+  next();
 });
 
 

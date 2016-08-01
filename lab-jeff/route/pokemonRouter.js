@@ -4,7 +4,8 @@ const Pokemon = require('../model/pokemon');
 const express = require('express');
 const router = express.Router();
 
-router.post('/pokemon/', (req, res, next) => {
+router.post('/', (req, res, next) => {
+  console.log('Post new pokemon...');
   let newPokemon = new Pokemon(req.body);
   newPokemon.save((err, pokemon) => {
     if (err) return next(err);
@@ -12,25 +13,24 @@ router.post('/pokemon/', (req, res, next) => {
   });
 });
 
-router.delete('/pokemon/:_id', (req, res, next) => {
+router.delete('/:_id', (req, res, next) => {
   let _id = req.params._id;
   Pokemon.findOneAndRemove({_id}, (err, pokemon) => {
     if (pokemon === undefined) {
       let err = new Error();
-      err.status = 404;
+      err.status = 400;
       return next(err);
     }
     res.json('Succesfull delete...');
   });
 });
 
-router.get('/pokemon/:_id', (req, res, next) => {
+router.get('/:_id', (req, res, next) => {
   let _id = req.params._id;
   Pokemon.findOne({_id}, (err, pokemon) => {
-    console.log(pokemon);
     if (pokemon === undefined) {
       let err = new Error();
-      err.status = 404;
+      err.status = 400;
       return next(err);
     }
     if (err) return next(err);
@@ -38,15 +38,11 @@ router.get('/pokemon/:_id', (req, res, next) => {
   });
 });
 
-router.get('/pokemon/', (req, res, next) => {
+router.get('/', (req, res, next) => {
   Pokemon.find({}, (err, pokemons) => {
     if (err) return next(err);
     res.json(pokemons);
   });
-});
-
-router.get('/', (req, res) => {
-  res.json({message: 'You have reached the API\'s home directory...'});
 });
 
 module.exports = router;

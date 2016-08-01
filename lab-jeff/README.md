@@ -15,10 +15,7 @@ Assuming you have mongoDB installed on your machine, next start mongod by runnin
 
 `mongod --dbpath db`
 
-
-###Test###
-
-To run the tests, linter, watcher and start the server type the command:
+To run the linter, watcher and start the server type the command:
 `gulp`
 
 Using HTTPie or you prefered HTTP request interface run any of the following commands:
@@ -34,6 +31,13 @@ GET ALL: `http :3000/api/pokemon`
 GET: `http :3000/api/pokemon/thatIdYouSaved`
 
 DELETE: `http delete :3000/api/pokemon/thatIdYouSaved`
+
+###Test###
+
+To run all tests, type the following command:
+
+`mocha`
+
 
 
 `Jeff Gebhardt - CF JS 401`
