@@ -13,5 +13,3 @@ Single Resource API
 - Send a PUT request with: http PUT :3000/api/panda/<id> name=<String> age=<Number> happy=<Boolean>
 - Bonus: Send a GET request to list all pandas with with: http GET :3000/api/all
 - Run eslint and mocha tests by typing 'gulp' in the command line  
-
-Not finished. Will resubmit.
