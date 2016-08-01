@@ -1,8 +1,6 @@
 'use strict';
 
 const express = require('express');
-const Hit = require('../model/Hit');
-const Hitlist = require('../model/Hitlist');
 const jsonParser = require('body-parser').json();
 const AppError = require('../lib/AppError');
 
