@@ -42,7 +42,7 @@ router.get('/panda/:id', (req, res) => {
 router.post('/panda', jsonParser, (req, res) => {
   let newPanda = new Panda(req.body);
   newPanda.save((err, panda) => {
-    if (err) return errResponse(AppError.error400('400').respond(res));
+    if(!req.body.name || !req.body.happy || !req.body.age) return errResponse(AppError.error400('400').respond(res));
     serverlog('panda: ', panda);
     return res.status(200).send(panda);
   });

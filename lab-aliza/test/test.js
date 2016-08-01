@@ -55,7 +55,7 @@ describe('Test CRUD ', () => {
   it('POST 400', (done) => {
     request('localhost:5000')
       .post('/api/panda')
-      .send({blah:'blah'})
+      .send({huzzah: 'huzzah'})
       .end((err, res) => {
         expect(res).to.have.status(400);
         done();
