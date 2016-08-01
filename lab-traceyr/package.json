@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "body-parser": "^1.15.2",
     "chai": "^3.5.0",
     "chai-gulp-helpers": "0.0.3",
     "chai-http": "^3.0.0",
