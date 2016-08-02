@@ -28,18 +28,18 @@ describe('testing routes for COFFEE', () =>{
     });
   });
 
-  // it('should POST 400 error', function(done){
-  //   request('localhost:3002')
-  //     .post('/api/coffee')
-  //     .send({
-  //       something: 'isnothing'
-  //     })
-  //     .end(function(err, res){
-  //       expect(res).to.have.status(400);
-  //       expect(res.text).to.have.string('bad request');
-  //       done();
-  //     });
-  // });
+  it('should POST 400 error', function(done){
+    request('localhost:3002')
+      .post('/api/coffee')
+      .send({
+        something: 'isnothing'
+      })
+      .end(function(err, res){
+        expect(res).to.have.status(400);
+        expect(res.text).to.have.string('bad request');
+        done();
+      });
+  });
 
   it('should POST 200', function(done){
     request('localhost:3002')

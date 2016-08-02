@@ -10,10 +10,10 @@ const Coffee = require('../model/coffee_drinks');
 const router = module.exports = exports = express.Router();
 
 //do I need next in the post function call?
-router.post('/coffee', bodyParser, (req, res, next)=>{
+router.post('/coffee', bodyParser, (req, res)=>{
   if(!req.body.name || !req.body.rating || !req.body.usualOrder) return res.sendError(AppErr.error400('bad request, no body'));
-  Coffee(req.body).save((err, coffee) => {
-    if(err) return next(err)
+  Coffee(req.body).save((err, coffee, next) => {
+    if(err) return next(err);
     res.status(200).json(coffee);
   });
 
