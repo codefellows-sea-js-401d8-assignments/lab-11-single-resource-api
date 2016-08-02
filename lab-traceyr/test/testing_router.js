@@ -7,6 +7,7 @@ const Coffee = require('../model/coffee_drinks');
 chai.use(chaiHTTP);
 let app = require('../server');
 let server;
+let testCoffee;
 
 const expect = chai.expect;
 const request = chai.request;
@@ -17,6 +18,16 @@ describe('testing routes for COFFEE', () =>{
   before((done) =>{
     server = app.listen(3002, () =>{
       console.log('Server On 3002');
+      // done();
+    });
+
+    testCoffee = Coffee({
+      name: 'Latte',
+      rating: 3,
+      usualOrder: false
+    }).
+    testCoffee.save((err, coffee) =>{
+      testCoffee = coffee;
       done();
     });
   });
@@ -52,6 +63,25 @@ describe('testing routes for COFFEE', () =>{
       .end(function(err, res){
         expect(res).to.have.status(200);
         expect(res.text).to.have.string('americano');
+        done();
+      });
+  });
+
+  it('should GET 404 error', function(done){
+    request('localhost:3002')
+      .get('/api/coffee/1111')
+      .end(function(err, res){
+        expect(res).to.have.status(404);
+        done();
+      });
+  });
+
+  it('should GET 200', function(done){
+    request('localhost:3002')
+      .get('/api/coffee/' + testCoffee._id)
+      .end(function(err, res){
+        expect(res).to.have.status(200);
+        expect(res.body.usualOrder).to.eql('false');
         done();
       });
   });
