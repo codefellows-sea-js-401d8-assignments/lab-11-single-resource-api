@@ -26,6 +26,7 @@ trainerRouter.delete('/:_id', (req, res, next) => {
   });
 });
 
+
 trainerRouter.get('/:_id', (req, res, next) => {
   let _id = req.params._id;
   Trainer.findOne({_id}, (err, trainer) => {
@@ -46,5 +47,4 @@ trainerRouter.get('/', (req, res, next) => {
   });
 });
 
-
-trainerRouter.use('/:trainerName/pokemon', trainerPokemonRouter);
+trainerRouter.use('/:trainerId/pokemon', trainerPokemonRouter);

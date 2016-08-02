@@ -20,17 +20,27 @@ To run the linter, watcher and start the server type the command:
 
 Using HTTPie or you prefered HTTP request interface run any of the following commands:
 
-POST: `http POST :3000/api/pokemon "pokeName=charizard" "pokeType=fire"`
+POST Trainer: `http POST :3000/api/trainer "trainerName=jeff" "trainerSkill=5"`
 
-You will recieve a unique ID for that pokemon, save that number.
+You will recieve a unique ID for that trainer, save that number.
 
-To retrieve or delete a Pokemon follow the below format, "pokeId" must match with the ID created with the Pokemon.
+To retrieve or delete a Pokemon follow the below format, ID must match with the ID created with the trainer.
 
-GET ALL: `http :3000/api/pokemon`
+POST Pokemon to specific trainer: `http POST :3000/api/trainerIdGoesHere/pokemon "pokeName=charizard" "pokeType=fire"`
 
-GET: `http :3000/api/pokemon/thatIdYouSaved`
+GET ALL Pokemon: `http :3000/api/pokemon`
 
-DELETE: `http delete :3000/api/pokemon/thatIdYouSaved`
+GET ALL Pokemon for trainer: `http :3000/api/trainerIdGoesHere/pokemon`
+
+GET Specific Pokemon: `http :3000/api/pokemon/pokemonIdGoesHere`
+
+DELETE Specific Pokemon: `http DELETE :3000/api/pokemon/pokemonIdGoesHere` 
+
+GET ALL trainers: `http :3000/api/trainer`
+
+GET Specific trainer: `http :3000/api/trainer/trainerIdGoesHere`
+
+DELETE Specific: `http DELETE :3000/api/trainer/trainerIdGoesHere`
 
 ###Test###
 
