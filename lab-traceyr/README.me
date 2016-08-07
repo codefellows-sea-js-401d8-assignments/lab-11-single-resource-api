@@ -1,0 +1,33 @@
+#Instructions
+
+-Clone the file onto your local machine from github
+-Run in the terminal: npm install
+-To run tests and lint files in the terminal: gulp
+-To start the server from the terminal run: node server.js
+
+-To create a correct POST request:
+--In one terminal in your root directory type: node server
+--In a second terminal in your root directory type: http POST :3002/api/coffee name=drip rating=3 usualOrder=true
+-To create a failing POST request:
+--In one terminal in your root directory type: node server
+--In a second terminal in your root directory type: http POST :3002/api/coffee something=nothing
+
+-To create a correct GET request:
+--In one terminal in your root directory type: node server
+--In a second terminal in your root directory type: http GET :3002/api/coffee/[ID OF DRINK YOU JUST CREATED]
+-To create a failing GET request:
+--In one terminal in your root directory type: node server
+--In a second terminal in your root directory type: http GET :3002/api/coffee/3333 or http GET :3002/api/coffee
+To GET all:
+--In one terminal in your root directory type: node server
+--In a second terminal in your root directory type: http GET :3002/api/coffee/all
+
+-To create a failing PUT request:
+--In one terminal in your root directory type: node server
+--In a second terminal in your root directory type: http put :3002/api/coffee/4567897?name=save
+-To create a passing PUT request:
+--In one terminal in your root directory type: node server
+--In a second terminal in your root directory type: http put :3002/api/coffee/[ID OF DRINK YOU JUST CREATED] name=americano rating=4 usualOrder=true
+-To do a DELETE request:
+--In one terminal in your root directory type: node server
+--In a second terminal in your root directory type: http delete :3002/api/coffee/[ID OF DRINK YOU JUST CREATED]
