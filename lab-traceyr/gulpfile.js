@@ -7,13 +7,13 @@ var testFiles = ['test/**/*.js'];
 var allFiles = ['index.js', 'server.js', 'test/**/*.js', 'lib/**/*.js', 'gulpfile.js'];
 
 gulp.task('lint:all', () => {
-  gulp.src(allFiles)
+  return gulp.src(allFiles)
     .pipe(eslint())
     .pipe(eslint.format());
 });
 
 gulp.task('mocha:test', () => {
-  gulp.src(testFiles)
+  return gulp.src(testFiles)
     .pipe(mocha());
 });
 

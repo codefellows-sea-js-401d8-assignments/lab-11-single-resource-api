@@ -32,6 +32,7 @@ describe('testing routes for COFFEE', () =>{
 
   after((done) =>{
     mongoose.connection.db.dropDatabase(() =>{
+      mongoose.disconnect();
       server.close();
       done();
     });
