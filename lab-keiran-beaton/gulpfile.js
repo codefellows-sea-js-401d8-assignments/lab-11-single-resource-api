@@ -8,15 +8,7 @@ let scripts = ['./server.js', './lib/*.js', './test/*.js', './model/*.js', './ro
 let testFiles = ['./test/*.js'];
 gulp.task('lint', () => {
   gulp.src(scripts)
-    .pipe(eslint({
-      rules: {
-        'indent': [2,2]
-      },
-      envs: [
-        'node',
-        'es6'
-      ]
-    }))
+    .pipe(eslint)
     .pipe(eslint.format());
 });
 gulp.task('test', () => {

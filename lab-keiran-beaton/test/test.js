@@ -6,7 +6,6 @@ chai.use(chaiHttp);
 const request = ('chai').request;
 const expect = ('chai').expect;
 
-const mongoose = require('mongoose');
 const Food = require('../model/food');
 var app = require('../server');
 let server;
