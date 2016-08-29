@@ -2,18 +2,19 @@
 
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-chai.use(chaiHttp);
-const request = ('chai').request;
-const expect = ('chai').expect;
-
+const mongoose = require('mongoose');
 const Food = require('../model/food');
-var app = require('../server');
-let server;
+chai.use(chaiHttp);
 
+const expect = chai.expect;
+const request = chai.request;
 const TEST_DB_SERVER = 'mongodb://localhost/test_db';
 process.env.DB_SERVER = TEST_DB_SERVER;
 
+var app = require('../server');
+
 describe('Test Crud', () => {
+  var server;
   before((done) => {
     server = app.listen(3000, () => {
       console.log('server up on 3000');
@@ -22,6 +23,8 @@ describe('Test Crud', () => {
   });
 
   after((done) => {
+    mongoose.connection.db.dropDatabase(() => {});
+    console.log('database dropped');
     server.close();
     done();
   });
@@ -29,7 +32,7 @@ describe('Test Crud', () => {
   it('should post a food', (done) => {
     request('localhost:3000')
       .post('/api/food')
-      .send({name: 'testFood', countryOfOrigin: 'America'})
+      .send({name: 'testFood', countryOfOrigin: 'America', isItGood: true})
       .end((err, res) => {
         expect(err).to.eql(null);
         expect(res).to.have.status(200);
@@ -39,31 +42,41 @@ describe('Test Crud', () => {
 
   it('should respond with bad request', (done) => {
     request('localhost:3000')
-      .post('/api/food')
+      .post('/api/food/')
       .end((err, res) => {
         expect(err).to.have.status(400);
-        expect(err.message).to.eql('bad request');
-        expect(res.status).to.not.eql(200);
+        expect(err.message).to.eql('Bad Request');
+        expect(res);
         done();
       });
   });
 });
 
 describe('Testing Crud with initial data', () => {
+  var server;
   let testFood;
   before((done) => {
     server = app.listen(3000, () => {
-      console.log('server up on 3000');
+      console.log('up on 3000');
     });
-    testFood = Food({name: 'testFood1', countryOfOrigin:'Italy'});
+
+    testFood = Food({
+      name: 'testFood',
+      countryOfOrigin: 'America',
+      isItGood: true
+    });
+
     testFood.save((err, food) => {
       testFood = food;
       done();
     });
   });
+
   after((done) => {
-    server.close();
-    done();
+    mongoose.connection.db.dropDatabase(() => {
+      server.close();
+      done();
+    });
   });
 
   it('should GET a food', (done) => {
@@ -102,8 +115,7 @@ describe('Testing Crud with initial data', () => {
     request('localhost:3000')
       .put('/api/food/' + testFood._id)
       .end((err, res) => {
-        expect(err).to.have.status(400);
-        expect(err.message).to.eql('bad request');
+        expect(err.status).to.eql(400);
         expect(res.status).to.not.eql(200);
         done();
       });

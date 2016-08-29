@@ -3,49 +3,30 @@
 const express = require('express');
 const jsonParser = require('body-parser').json();
 const Food = require('../model/food');
-const AppError = require('../lib/appError');
+const ErrorHandler = require('../lib/errorHandler');
 
 const foodRouter = module.exports = exports = express.Router();
 
 foodRouter.post('/', jsonParser, (req, res, next) => {
-  if(!req.body) return res.sendError(AppError.error400('invalid body'));
-  let newFood = new Food(req.body);
-  newFood.save((err, food) => {
-    if (err) return next(err);
-    res.json(food);
-  });
+  (Food(req.body)).save().then(res.json.bind(res), ErrorHandler(400, next, 'bad request'));
 });
 
 foodRouter.get('/', (req, res, next) => {
-  Food.find({}, (err, foods) => {
-    if (err) return next(err);
-    res.json(foods);
-  });
+  Food.find().then(res.bind.json(res), ErrorHandler(500, next, 'internal server error'));
 });
 
 foodRouter.get('/:id', (req, res, next) => {
-  Food.findOne({_id: req.params.id}, (err, food) => {
-    if(!food) return res.sendError(AppError.error404('invalid id'));
-    if (err) return next(err);
-    res.json(food);
-  });
+  let notFound = ErrorHandler(404, next);
+  Food.findOne({'_id':req.params.id}).then((data) => {
+    if (!data) return next(notFound(new Error('not found')));
+    res.json(data);
+  }, ErrorHandler(400, next, 'bad request'));
 });
 
 foodRouter.put('/:id', jsonParser, (req, res, next) => {
-  if(!req.params.id) return res.sendError(AppError.error404('no id'));
-  if(!req.body) return res.sendError(AppError.error400('invalid body'));
-  Food.findOneAndUpdate({_id: req.params.id}, req.body, (err, food) => {
-    if(!food) return res.sendError(AppError.error404('invalid id'));
-    if (err) return next(err);
-    res.json({message:'success'});
-  });
+  Food.findOneAndUpdate({'_id':req.params.id}, req.body).then(res.json.bind(res), ErrorHandler(400, next, 'bad request'));
 });
 
 foodRouter.delete('/:id', (req, res, next) => {
-  if(!req.body.id) return res.sendError(AppError.error404('no id'));
-  Food.findOneAndRemove({_id: req.params.id}, (err, food) => {
-    if(!food) return res.sendError(AppError.error404('invalid id'));
-    if (err) return next(err);
-    res.json({message:'success'});
-  });
+  (Food.remove({'_id':req.params.id})).then(res.json.bind(res), ErrorHandler(400, next, 'bad request'));
 });
