@@ -8,25 +8,47 @@ const ErrorHandler = require('../lib/errorHandler');
 const foodRouter = module.exports = exports = express.Router();
 
 foodRouter.post('/', jsonParser, (req, res, next) => {
-  (Food(req.body)).save().then(res.json.bind(res), ErrorHandler(400, next, 'bad request'));
+  let badId = ErrorHandler(400, next);
+  (Food(req.body)).save().then(res.json.bind(res), badId);
 });
 
 foodRouter.get('/', (req, res, next) => {
-  Food.find().then(res.bind.json(res), ErrorHandler(500, next, 'internal server error'));
+  Food.find({}, (err, food) => {
+    if (err) {
+      ErrorHandler(500, next, 'Internal Server Error');
+    }
+    res.json(food);
+  });
 });
 
 foodRouter.get('/:id', (req, res, next) => {
-  let notFound = ErrorHandler(404, next);
-  Food.findOne({'_id':req.params.id}).then((data) => {
-    if (!data) return next(notFound(new Error('not found')));
-    res.json(data);
-  }, ErrorHandler(400, next, 'bad request'));
+  Food.findOne({'_id':req.params.id}, (err, food) => {
+    if (err) {
+      ErrorHandler(400, next, 'Bad Request');
+    }
+    res.json(food);
+  });
+  ErrorHandler(404, next, 'Not Found');
 });
 
 foodRouter.put('/:id', jsonParser, (req, res, next) => {
-  Food.findOneAndUpdate({'_id':req.params.id}, req.body).then(res.json.bind(res), ErrorHandler(400, next, 'bad request'));
+  Food.findOneAndUpdate({'_id':req.params.id}, req.body, (err) => {
+    if (err) {
+      ErrorHandler(400, next, 'Bad Request');
+    }
+    let message = 'success';
+    res.json(message);
+  });
+  ErrorHandler(404, next, 'Not Found');
 });
 
 foodRouter.delete('/:id', (req, res, next) => {
-  (Food.remove({'_id':req.params.id})).then(res.json.bind(res), ErrorHandler(400, next, 'bad request'));
+  Food.findOneAndRemove({'_id':req.params.id}, (err) => {
+    if (err) {
+      ErrorHandler(400, next, 'Bad Request');
+    }
+    let message = 'success';
+    res.json(message);
+  });
+  ErrorHandler(404, next, 'Not Found');
 });

@@ -4,6 +4,7 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const mongoose = require('mongoose');
 const Food = require('../model/food');
+const Promise = require('../lib/promise');
 chai.use(chaiHttp);
 
 const expect = chai.expect;
@@ -11,15 +12,14 @@ const request = chai.request;
 const TEST_DB_SERVER = 'mongodb://localhost/test_db';
 process.env.DB_SERVER = TEST_DB_SERVER;
 
-var app = require('../server');
+mongoose.Promise = Promise;
+mongoose.connect(TEST_DB_SERVER);
 
 describe('Test Crud', () => {
   var server;
   before((done) => {
-    server = app.listen(3000, () => {
-      console.log('server up on 3000');
-      done();
-    });
+    server = require('../server');
+    done();
   });
 
   after((done) => {
@@ -56,9 +56,7 @@ describe('Testing Crud with initial data', () => {
   var server;
   let testFood;
   before((done) => {
-    server = app.listen(3000, () => {
-      console.log('up on 3000');
-    });
+    server = require('../server');
 
     testFood = Food({
       name: 'testFood',
