@@ -26,3 +26,5 @@ To update a resource, make a put request to the path localhost:3000/api/food/:id
 To remove a resource, make a delete request to the path localhost:3000/api/food/:id
 
 ## Testing
+
+To run the linter and tests, run `gulp` from the command line. Be sure that mongo is running when you perform tests.
