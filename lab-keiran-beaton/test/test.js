@@ -13,44 +13,6 @@ const TEST_DB_SERVER = 'mongodb://localhost/test_db';
 process.env.DB_SERVER = TEST_DB_SERVER;
 
 mongoose.Promise = Promise;
-mongoose.connect(TEST_DB_SERVER);
-
-describe('Test Crud', () => {
-  var server;
-  before((done) => {
-    server = require('../server');
-    done();
-  });
-
-  after((done) => {
-    mongoose.connection.db.dropDatabase(() => {});
-    console.log('database dropped');
-    server.close();
-    done();
-  });
-
-  it('should post a food', (done) => {
-    request('localhost:3000')
-      .post('/api/food')
-      .send({name: 'testFood', countryOfOrigin: 'America', isItGood: true})
-      .end((err, res) => {
-        expect(err).to.eql(null);
-        expect(res).to.have.status(200);
-        done();
-      });
-  });
-
-  it('should respond with bad request', (done) => {
-    request('localhost:3000')
-      .post('/api/food/')
-      .end((err, res) => {
-        expect(err).to.have.status(400);
-        expect(err.message).to.eql('Bad Request');
-        expect(res);
-        done();
-      });
-  });
-});
 
 describe('Testing Crud with initial data', () => {
   var server;
@@ -59,14 +21,16 @@ describe('Testing Crud with initial data', () => {
     server = require('../server');
 
     testFood = Food({
-      name: 'testFood',
+      name: 'testFood1',
       countryOfOrigin: 'America',
       isItGood: true
     });
 
-    testFood.save((err, food) => {
-      testFood = food;
+    testFood.save().then((foodData) => {
+      this.testFood = foodData;
       done();
+    }, (err) => {
+      throw err;
     });
   });
 
@@ -77,9 +41,20 @@ describe('Testing Crud with initial data', () => {
     });
   });
 
+  it('should post a food', (done) => {
+    request('localhost:3000/api/food')
+    .post('')
+    .send({name: 'testFood', countryOfOrigin: 'America', isItGood: true})
+    .end((err, res) => {
+      expect(err).to.eql(null);
+      expect(res).to.have.status(200);
+      done();
+    });
+  });
+
   it('should GET a food', (done) => {
-    request('localhost:3000')
-      .get('api/food/' + testFood._id)
+    request('localhost:3000/api/food')
+      .get('/' + testFood._id)
       .end((err, res) => {
         expect(err).to.eql(null);
         expect(res.body.name).to.eql('testFood1');
@@ -88,19 +63,19 @@ describe('Testing Crud with initial data', () => {
   });
 
   it('should return an error on a bad Get', (done) => {
-    request('localhost:3000')
-      .get('api/food/badid')
+    request('localhost:3000/api/food')
+      .get('/badid')
       .end((err, res) => {
-        expect(err).to.have.status(404);
-        expect(err.message).to.eql('not found');
+        expect(err).to.have.status(400);
+        expect(err.message).to.eql('Bad Request');
         expect(res.status).to.not.eql(200);
         done();
       });
   });
 
   it('should PUT a food', (done) => {
-    request('localhost:3000')
-      .put('/api/food/' + testFood._id)
+    request('localhost:3000/api/food')
+      .put('/' + testFood._id)
       .send({name:'newTestFood'})
       .end((err, res) => {
         expect(err).to.eql(null);
@@ -109,31 +84,22 @@ describe('Testing Crud with initial data', () => {
       });
   });
 
-  it('should respond with bad request', (done) => {
-    request('localhost:3000')
-      .put('/api/food/' + testFood._id)
-      .end((err, res) => {
-        expect(err.status).to.eql(400);
-        expect(res.status).to.not.eql(200);
-        done();
-      });
-  });
 
-  it('should respond with not found', (done) => {
-    request('localhost:3000')
-      .put('/api/food/badid')
+  it('should respond with bad request', (done) => {
+    request('localhost:3000/api/food')
+      .put('/badid')
       .send({name: 'namenamename'})
       .end((err, res) => {
-        expect(err).to.have.status(404);
-        expect(err.message).to.eql('not found');
-        expect(res.status).to.not.eql(200);
+        expect(err).to.have.status(400);
+        expect(err.message).to.eql('Bad Request');
+        expect(res).to.not.have.status(200);
         done();
       });
   });
 
   it('should DELETE a food', (done) => {
-    request('localhost:3000')
-      .delete('/api/food/' + testFood._id)
+    request('localhost:3000/api/food')
+      .delete('/' + testFood._id)
       .end((err, res) => {
         expect(err).to.eql(null);
         expect(res).to.have.status(200);
@@ -141,13 +107,13 @@ describe('Testing Crud with initial data', () => {
       });
   });
 
-  it('should respond with not found', (done) => {
-    request('localhost:3000')
-      .delete('/api/food/badid')
+  it('delete - not found', (done) => {
+    request('localhost:3000/api/food')
+      .delete('/badid')
       .end((err, res) => {
         expect(err).to.have.status(404);
-        expect(err.message).to.eql(400);
-        expect(res.status).to.not.eql(200);
+        expect(err.message).to.eql('Not Found');
+        expect(res).to.not.have.status(200);
         done();
       });
   });

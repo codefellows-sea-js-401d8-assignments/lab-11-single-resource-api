@@ -9,4 +9,4 @@ const foodSchema = new Schema({
   isItGood: {type: Boolean, default: true}
 });
 
-let Food = module.exports = exports = mongoose.model('Food', foodSchema);
+module.exports = exports = mongoose.model('Food', foodSchema);
